@@ -1,2 +1,243 @@
-# fsociety-infrastructure
-Infraestrutura empresarial Four-Leged Firewall - Projeto universitário ESTG/IPP
+<div align="center">
+
+# 🔐 FSociety.pt
+
+### Infraestrutura Empresarial Segura | Four-Legged Firewall Architecture
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ryantech00.github.io/fsociety-infrastructure/)
+[![pfSense](https://img.shields.io/badge/Firewall-pfSense-orange)](https://www.pfsense.org/)
+[![Proxmox](https://img.shields.io/badge/Virtualization-Proxmox%20VE-E57000)](https://www.proxmox.com/)
+[![CrowdSec](https://img.shields.io/badge/IDS-CrowdSec-blueviolet)](https://www.crowdsec.net/)
+[![Cloudflare](https://img.shields.io/badge/WAF-Cloudflare-F38020)](https://www.cloudflare.com/)
+
+*Projeto universitário de implementação de infraestrutura de rede empresarial com defesa em profundidade*
+
+**ESTG - Instituto Politécnico do Porto | 2024/2025**
+
+---
+
+[📖 Documentação](https://ryantech00.github.io/fsociety-infrastructure/) •
+[🔧 Wiki](https://github.com/RyanTech00/fsociety-infrastructure/wiki) •
+[📊 Arquitetura](#-arquitetura)
+
+</div>
+
+---
+
+## 📋 Sobre o Projeto
+
+Este projeto implementa uma **infraestrutura de rede empresarial completa** para a empresa fictícia **FSociety.pt**, demonstrando conceitos avançados de segurança e administração de sistemas:
+
+- 🛡️ **Segurança Perimetral** - Firewall stateful com segmentação em 4 zonas (WAN/LAN/DMZ/VPN)
+- 🔐 **Gestão de Identidades** - Active Directory com autenticação LDAP centralizada
+- 🌐 **Serviços Corporativos** - Email, Web, VPN, Colaboração de Ficheiros
+- ☁️ **Proteção Multi-Camada** - Cloudflare (Edge) + pfSense (Perímetro) + CrowdSec (Host)
+- 📊 **Deteção de Ameaças** - 57+ cenários de deteção com blocklists comunitárias (~70k IPs)
+
+---
+
+## 🏗️ Arquitetura
+
+### Diagrama de Rede
+
+```
+                              ┌─────────────────┐
+                              │    INTERNET     │
+                              └────────┬────────┘
+                                       │
+              ┌────────────────────────┼────────────────────────┐
+              │                        │                        │
+              ▼                        ▼                        ▼
+    ┌─────────────────┐     ┌─────────────────┐      ┌─────────────────┐
+    │   CLOUDFLARE    │     │   DNS Only      │      │   DNS Only      │
+    │  (HTTP/HTTPS)   │     │   (SMTP/IMAP)   │      │   (OpenVPN)     │
+    │  WAF + CDN      │     │                 │      │                 │
+    └────────┬────────┘     └────────┬────────┘      └────────┬────────┘
+              │                       │                        │
+              └───────────────────────┼────────────────────────┘
+                                      │
+                                      ▼
+                    ┌─────────────────────────────────┐
+                    │            pfSense              │
+                    │      Four-Legged Firewall       │
+                    │                                 │
+                    │   WAN: 188.81.65.191 (Pública)  │
+                    │   ┌─────┬─────┬─────┐          │
+                    │   │ LAN │ DMZ │ VPN │          │
+                    └───┴──┬──┴──┬──┴──┬──┴──────────┘
+                           │     │     │
+         ┌─────────────────┘     │     └─────────────────┐
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│      LAN        │    │      DMZ        │    │      VPN        │
+│ 192.168.1.0/24  │    │  10.0.0.0/24    │    │  10.8.0.0/24    │
+├─────────────────┤    ├─────────────────┤    ├─────────────────┤
+│ ┌─────────────┐ │    │ ┌─────────────┐ │    │ Por Grupo AD:   │
+│ │  Samba AD   │ │    │ │ Mail Server │ │    │                 │
+│ │ DNS + DHCP  │ │    │ │  (Mailcow)  │ │    │ • TI: .10-.59   │
+│ │ FreeRADIUS  │ │    │ └─────────────┘ │    │ • Gestão: .60+  │
+│ │ CrowdSec    │ │    │ ┌─────────────┐ │    │ • Finance: .110+│
+│ └─────────────┘ │    │ │  Proxmox    │ │    │ • Comercial     │
+│ ┌─────────────┐ │    │ │ Mail Gateway│ │    │ • RH: .210+     │
+│ │  Nextcloud  │ │    │ └─────────────┘ │    │                 │
+│ │   + LDAP    │ │    │ ┌─────────────┐ │    │ Autenticação:   │
+│ │ CrowdSec    │ │    │ │ Web Server  │ │    │ RADIUS + LDAP   │
+│ └─────────────┘ │    │ │  (Nginx)    │ │    │                 │
+│ ┌─────────────┐ │    │ │ CrowdSec    │ │    │                 │
+│ │Proxmox Backup│ │   │ │ 3 Bouncers  │ │    │                 │
+│ └─────────────┘ │    │ └─────────────┘ │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+### Camadas de Segurança (Defense in Depth)
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  CAMADA 1: EDGE (Cloudflare)                                            │
+│  ├── WAF com OWASP Managed Rules + Regras Personalizadas               │
+│  ├── Mitigação DDoS (L3/L4/L7)                                         │
+│  ├── CDN com cache em 330+ datacenters                                 │
+│  └── SSL/TLS Full (Strict) com TLS 1.3                                 │
+├─────────────────────────────────────────────────────────────────────────┤
+│  CAMADA 2: PERÍMETRO (pfSense)                                          │
+│  ├── Stateful Firewall com Default Deny                                │
+│  ├── Segmentação em 4 zonas isoladas                                   │
+│  ├── NAT/Port Forwarding controlado                                    │
+│  └── VPN com autenticação RADIUS/LDAP                                  │
+├─────────────────────────────────────────────────────────────────────────┤
+│  CAMADA 3: HOST (CrowdSec)                                              │
+│  ├── 57+ cenários de deteção (CVEs, brute-force, scans)                │
+│  ├── 3 Bouncers: Cloudflare + Firewall + Nginx                         │
+│  ├── Community Blocklist: ~70.000 IPs maliciosos                       │
+│  └── Análise comportamental de logs em tempo real                      │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🛠️ Stack Tecnológica
+
+### Infraestrutura Core
+
+| Componente | Tecnologia | Função |
+|------------|------------|--------|
+| **Virtualização** | Proxmox VE 8.x | Hypervisor Type-1 com KVM/LXC |
+| **Firewall** | pfSense CE 2.7.x | Segmentação e controlo de tráfego |
+| **Identidade** | Samba AD DC 4.x | Active Directory + DNS + DHCP |
+| **Autenticação** | FreeRADIUS 3.x | RADIUS para VPN e WiFi |
+
+### Serviços
+
+| Componente | Tecnologia | Localização |
+|------------|------------|-------------|
+| **Email** | Mailcow (Postfix + Dovecot) | DMZ |
+| **Email Gateway** | Proxmox Mail Gateway 8.x | DMZ |
+| **Web Server** | Nginx | DMZ |
+| **Ficheiros** | Nextcloud 28.x + LDAP | LAN |
+| **Backup** | Proxmox Backup Server | LAN |
+| **VPN** | OpenVPN 2.x | pfSense |
+
+### Segurança
+
+| Camada | Tecnologia | Proteção |
+|--------|------------|----------|
+| **Edge** | Cloudflare | WAF, DDoS, CDN |
+| **Perímetro** | pfSense | Firewall, NAT, VPN |
+| **Host** | CrowdSec | IDS/IPS, Blocklists |
+| **Email** | PMG + SPF/DKIM/DMARC | Anti-spam, Anti-malware |
+
+---
+
+## 📊 Métricas de Segurança
+
+| Métrica | Valor |
+|---------|-------|
+| **Cenários CrowdSec Ativos** | 57+ (incluindo CVEs críticas) |
+| **IPs na Blocklist** | ~70.000 (CAPI community) |
+| **Ameaças Mitigadas (24h)** | 234 pelo Cloudflare |
+| **Pedidos Bloqueados** | 411 pelo Nginx Bouncer |
+| **Zonas de Segurança** | 4 (WAN/LAN/DMZ/VPN) |
+
+---
+
+## 📁 Estrutura do Repositório
+
+```
+fsociety-infrastructure/
+├── 📄 README.md                    # Este ficheiro
+├── 📄 LICENSE                      # Licença MIT
+│
+├── 📁 docs/                        # Documentação (GitHub Pages)
+│   ├── index.md                    # Página inicial
+│   ├── 01-arquitetura/             # Visão geral e planeamento
+│   ├── 02-proxmox/                 # Setup do hypervisor
+│   ├── 03-pfsense/                 # Configuração do firewall
+│   ├── 04-active-directory/        # Samba AD + LDAP + RADIUS
+│   ├── 05-dmz/                     # Email, Web, Mail Gateway
+│   ├── 06-vpn/                     # OpenVPN + autenticação
+│   ├── 07-nextcloud/               # Colaboração + LDAP
+│   ├── 08-cloudflare/              # WAF, CDN, DNS
+│   ├── 09-crowdsec/                # IDS/IPS distribuído
+│   └── assets/images/              # Screenshots e diagramas
+│
+├── 📁 configs/                     # Ficheiros de configuração exemplo
+│   ├── pfsense/
+│   ├── postfix/
+│   ├── dovecot/
+│   ├── nginx/
+│   ├── crowdsec/
+│   └── samba/
+│
+└── 📁 scripts/                     # Scripts de automação
+```
+
+---
+
+## 📖 Documentação
+
+| Recurso | Descrição |
+|---------|-----------|
+| 📚 **[GitHub Pages](https://ryantech00.github.io/fsociety-infrastructure/)** | Documentação formatada e navegável |
+| 📝 **[Wiki](https://github.com/RyanTech00/fsociety-infrastructure/wiki)** | Guias passo a passo detalhados |
+
+### Guias Principais
+
+1. [🖥️ Instalação do Proxmox VE](docs/02-proxmox/instalacao.md)
+2. [🛡️ Configuração do pfSense](docs/03-pfsense/instalacao.md)
+3. [👥 Implementação do Samba AD](docs/04-active-directory/samba-ad.md)
+4. [📧 Servidor de Email Completo](docs/05-dmz/mailcow.md)
+5. [🔒 Setup do OpenVPN + RADIUS](docs/06-vpn/openvpn-radius.md)
+6. [📁 Nextcloud com LDAP](docs/07-nextcloud/instalacao-ldap.md)
+7. [☁️ Integração Cloudflare](docs/08-cloudflare/waf-cdn-dns.md)
+8. [🛡️ CrowdSec Multi-Server](docs/09-crowdsec/arquitetura.md)
+
+---
+
+## 🎓 Informação Académica
+
+| Campo | Informação |
+|-------|------------|
+| **Instituição** | ESTG - Instituto Politécnico do Porto |
+| **Autor** | Ryan |
+| **Ano Letivo** | 2024/2025 |
+| **Domínio** | fsociety.pt |
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+**[⬆ Voltar ao topo](#-fsocietypt)**
+
+---
+
+<sub>🔐 FSociety.pt - Infraestrutura Empresarial Segura | Projeto Universitário ESTG/IPP</sub>
+
+</div>
