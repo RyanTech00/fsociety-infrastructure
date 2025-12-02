@@ -450,28 +450,36 @@ samba-tool ntacl set "O:DAG:DAD:P(A;OICI;FA;;;DA)(A;OICI;0x1200a9;;;DU)" /srv/sa
 ```bash
 #!/bin/bash
 # Script de teste de partilhas
+# NOTA: Substituir <PASSWORD> pela password real do Administrator
 
 echo "=== Teste de Partilhas SMB ==="
 
+# Solicitar password
+read -sp "Password do Administrator: " ADMIN_PASS
+echo
+
 # Listar partilhas
 echo -e "\n--- Partilhas Disponíveis ---"
-smbclient -L localhost -U Administrator%'P@ssw0rd123!'
+smbclient -L localhost -U Administrator%"$ADMIN_PASS"
 
 # Testar sysvol
 echo -e "\n--- SYSVOL ---"
-smbclient //localhost/sysvol -U Administrator%'P@ssw0rd123!' -c "ls" 2>/dev/null && echo "OK" || echo "ERRO"
+smbclient //localhost/sysvol -U Administrator%"$ADMIN_PASS" -c "ls" 2>/dev/null && echo "OK" || echo "ERRO"
 
 # Testar netlogon
 echo -e "\n--- NETLOGON ---"
-smbclient //localhost/netlogon -U Administrator%'P@ssw0rd123!' -c "ls" 2>/dev/null && echo "OK" || echo "ERRO"
+smbclient //localhost/netlogon -U Administrator%"$ADMIN_PASS" -c "ls" 2>/dev/null && echo "OK" || echo "ERRO"
 
 # Testar shared
 echo -e "\n--- SHARED ---"
-smbclient //localhost/shared -U Administrator%'P@ssw0rd123!' -c "ls" 2>/dev/null && echo "OK" || echo "ERRO"
+smbclient //localhost/shared -U Administrator%"$ADMIN_PASS" -c "ls" 2>/dev/null && echo "OK" || echo "ERRO"
 
 # Testar departamentos
 echo -e "\n--- DEPARTAMENTOS ---"
-smbclient //localhost/departamentos -U Administrator%'P@ssw0rd123!' -c "ls" 2>/dev/null && echo "OK" || echo "ERRO"
+smbclient //localhost/departamentos -U Administrator%"$ADMIN_PASS" -c "ls" 2>/dev/null && echo "OK" || echo "ERRO"
+
+# Limpar variável de password
+unset ADMIN_PASS
 ```
 
 ### Verificar Permissões

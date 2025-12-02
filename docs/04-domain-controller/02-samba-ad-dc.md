@@ -88,10 +88,12 @@ sudo samba-tool domain provision \
     --domain=FSOCIETY \
     --server-role=dc \
     --dns-backend=SAMBA_INTERNAL \
-    --adminpass='P@ssw0rd123!' \
+    --adminpass='<SUBSTITUIR_POR_PASSWORD_SEGURA>' \
     --option="interfaces=lo ens18" \
     --option="bind interfaces only=yes"
 ```
+
+> ⚠️ **SEGURANÇA**: Substitua `<SUBSTITUIR_POR_PASSWORD_SEGURA>` por uma password forte e única. Nunca use passwords de exemplo em ambientes de produção.
 
 ### Parâmetros Explicados
 
@@ -424,7 +426,8 @@ sudo samba-tool group listmembers "GRP_TI"
 
 ```bash
 # Criar utilizador de serviço para integrações LDAP
-sudo samba-tool user create svc_ldap 'SvcLdap@2024!' \
+# SEGURANÇA: Substituir '<PASSWORD_SEGURA>' por uma password forte
+sudo samba-tool user create svc_ldap '<PASSWORD_SEGURA>' \
     --description="Service Account para integrações LDAP" \
     --userou="OU=Service Accounts"
 
@@ -432,8 +435,10 @@ sudo samba-tool user create svc_ldap 'SvcLdap@2024!' \
 sudo samba-tool user setexpiry svc_ldap --noexpiry
 
 # Desativar mudança de password obrigatória
-sudo samba-tool user setpassword svc_ldap --newpassword='SvcLdap@2024!' --must-change-at-next-login=no
+sudo samba-tool user setpassword svc_ldap --newpassword='<PASSWORD_SEGURA>' --must-change-at-next-login=no
 ```
+
+> ⚠️ **SEGURANÇA**: Use uma password forte e única para o service account. Guarde-a de forma segura.
 
 ### Verificar Service Account
 

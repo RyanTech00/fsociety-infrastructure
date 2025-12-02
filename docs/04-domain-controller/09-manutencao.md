@@ -107,10 +107,13 @@ fi
 log "Executando samba-tool domain backup online..."
 BACKUP_FILE="$DAILY_DIR/samba-ad-backup-$DATE.tar.bz2"
 
+# SEGURANÇA: Usar ficheiro de credenciais ou variável de ambiente
+# Criar ficheiro: /root/.samba-credentials com: username=Administrator\npassword=<PASSWORD>
+# chmod 600 /root/.samba-credentials
 sudo samba-tool domain backup online \
     --targetdir="$DAILY_DIR" \
     --server=localhost \
-    -U Administrator%'P@ssw0rd123!'
+    -U Administrator --password="$(cat /root/.samba-backup-password)"
 
 if [ $? -eq 0 ]; then
     log "Backup criado com sucesso: $BACKUP_FILE"

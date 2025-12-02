@@ -110,8 +110,9 @@ ldap {
     port = 389
     
     # Identidade para bind
+    # SEGURANÇA: Substituir pela password real do service account
     identity = "CN=svc_ldap,OU=Service Accounts,DC=fsociety,DC=pt"
-    password = "SvcLdap@2024!"
+    password = "<SUBSTITUIR_POR_PASSWORD_SVC_LDAP>"
     
     # Base DN para pesquisas
     base_dn = "DC=fsociety,DC=pt"

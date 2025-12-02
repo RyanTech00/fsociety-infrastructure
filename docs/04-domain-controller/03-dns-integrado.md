@@ -347,7 +347,8 @@ dig @localhost google.com
 echo "=== Verificação de DNS do Samba AD ==="
 
 echo -e "\n--- Zonas DNS ---"
-sudo samba-tool dns zonelist dc.fsociety.pt -U Administrator --password='P@ssw0rd123!'
+# Nota: Será solicitada a password do Administrator
+sudo samba-tool dns zonelist dc.fsociety.pt -U Administrator
 
 echo -e "\n--- Registos A ---"
 for host in dc mail files webserver; do
