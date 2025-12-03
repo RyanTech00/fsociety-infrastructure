@@ -53,7 +53,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 |------|------|-------------------|------------|
 | **WAN** | 188.81.65.191 | ❌ Não confiável | Internet Gateway |
 | **LAN** | 192.168.1.0/24 | ✅ Alta confiança | DC, File Server, PBS |
-| **DMZ** | 10.0.0.0/24 | ⚠️ Média confiança | Mail, Web, Mail Gateway |
+| **DMZ** | 10.0.0.0/24 | ⚠️ Média confiança | Mailcow, Web |
 | **VPN** | 10.8.0.0/24 | 🔐 Autenticada | Utilizadores remotos |
 
 ---
@@ -191,6 +191,25 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | [SSL](06-webserver/07-ssl-letsencrypt.md) | Wildcard Let's Encrypt |
 | [DNS Cloudflare](06-webserver/08-dns-cloudflare.md) | Registos DNS |
 | [CrowdSec](06-webserver/09-crowdsec.md) | 3 bouncers |
+
+---
+
+### 📧 [Mailcow](08-mailcow/README.md)
+
+> Servidor de email completo com Postfix, Dovecot, SOGo, Rspamd e ClamAV
+
+| Documento | Descrição |
+|-----------|-----------|
+| [Instalação](08-mailcow/01-instalacao.md) | Docker, mailcow-dockerized |
+| [Configuração](08-mailcow/02-configuracao.md) | mailcow.conf, SSL/TLS |
+| [Domínios e Mailboxes](08-mailcow/03-dominios-mailboxes.md) | 20 contas fsociety.pt |
+| [Rspamd](08-mailcow/04-rspamd.md) | Anti-spam, Bayesian filter |
+| [Antivírus](08-mailcow/05-antivirus.md) | ClamAV integrado |
+| [Webmail](08-mailcow/06-webmail.md) | SOGo, ActiveSync, calendário |
+| [Registos DNS](08-mailcow/07-dns-records.md) | MX, SPF, DKIM, DMARC |
+| [Backup](08-mailcow/08-backup.md) | Scripts de backup e restore |
+| [Integração Zammad](08-mailcow/09-integracao-zammad.md) | tickets@fsociety.pt |
+| [Manutenção](08-mailcow/10-manutencao.md) | Updates, logs, troubleshooting |
 
 ---
 

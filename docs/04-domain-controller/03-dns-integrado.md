@@ -175,7 +175,7 @@ host 10.0.0.20 localhost
 
 | Prioridade | Mail Server | Descrição |
 |------------|-------------|-----------|
-| 10 | mail.fsociety.pt | Servidor principal (Mailcow) |
+| TXT | @ | v=spf1 include:spf. smtp2go.com -all |
 
 ### Adicionar Registos MX
 
@@ -228,7 +228,7 @@ sudo samba-tool dns add dc.fsociety.pt fsociety.pt dkim._domainkey TXT "v=DKIM1;
 | Tipo | Nome | Valor |
 |------|------|-------|
 | MX | @ | mail.fsociety.pt (10) |
-| TXT | @ | v=spf1 mx ip4:188.81.65.191 ~all |
+| TXT | @ | v=spf1 include:spf. smtp2go.com -all |
 | TXT | _dmarc | v=DMARC1; p=quarantine; ... |
 | TXT | dkim._domainkey | v=DKIM1; k=rsa; p=... |
 
