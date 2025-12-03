@@ -740,6 +740,63 @@ Services → ntopng
 
 ---
 
+## 📊 RADIUS Accounting Daemon
+
+### Visão Geral
+
+Para além da autenticação RADIUS, o OpenVPN Server 2 (RADIUS) está integrado com um **daemon de contabilização RADIUS** que implementa o protocolo RFC 2866 (RADIUS Accounting).
+
+Este daemon regista automaticamente:
+- ✅ **Início de sessão** (Acct-Start)
+- 🔄 **Atualizações periódicas** (Acct-Interim-Update a cada 30s)
+- ❌ **Fim de sessão** (Acct-Stop)
+- 📊 **Estatísticas de tráfego** (bytes enviados/recebidos)
+- ⏱️ **Duração da sessão**
+
+### Arquitetura
+
+```
+Cliente OpenVPN
+       ↓
+pfSense OpenVPN (Autenticação via RADIUS)
+       ↓
+Accounting Daemon (Monitoriza /var/log/openvpn-status.log)
+       ↓
+FreeRADIUS DC (192.168.1.10:1813)
+       ↓
+Logs de Accounting (/var/log/freeradius/radacct/)
+```
+
+### Funcionalidades
+
+| Evento | Ação | Atributos RADIUS |
+|--------|------|------------------|
+| **Cliente conecta** | Envia Acct-Start | Username, IP, Session-ID |
+| **Atualização (30s)** | Envia Acct-Interim-Update | Bytes In/Out, Session Time |
+| **Cliente desconecta** | Envia Acct-Stop | Totais finais, Duração |
+| **Mudança de IP** | Acct-Stop + Acct-Start | Fecha sessão antiga, inicia nova |
+
+### Benefícios
+
+- 📊 **Auditoria**: Rastreabilidade completa de acessos VPN
+- 📈 **Estatísticas**: Consumo de dados por utilizador
+- ⏱️ **Billing**: Duração de sessões para faturação
+- 🔒 **Compliance**: RGPD, ISO 27001, requisitos regulatórios
+- 🚨 **Deteção de Anomalias**: Identificação de padrões suspeitos
+
+### Informação Detalhada
+
+Para documentação completa do RADIUS Accounting Daemon, incluindo:
+- Instalação e configuração
+- Estrutura do código
+- Atributos RADIUS enviados
+- Troubleshooting
+- Casos de uso
+
+Consultar: **[OpenVPN RADIUS Accounting Daemon](10-accounting-daemon.md)**
+
+---
+
 ## 🎓 Informação Académica
 
 | Campo | Informação |

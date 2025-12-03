@@ -116,6 +116,7 @@
 | 7 | [Integração RADIUS](07-radius-integracao.md) | RADIUS com Domain Controller |
 | 8 | [Packages e Serviços](08-packages-servicos.md) | Packages instalados e configurações |
 | 9 | [Manutenção](09-manutencao.md) | Backup, updates e troubleshooting |
+| 10 | [OpenVPN RADIUS Accounting Daemon](10-accounting-daemon.md) | Daemon de contabilização RADIUS (RFC 2866) |
 
 ---
 
