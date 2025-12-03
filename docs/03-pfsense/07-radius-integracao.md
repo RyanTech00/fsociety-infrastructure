@@ -1,6 +1,10 @@
+---
+layout: default
+---
+
 # 🔐 Integração RADIUS
 
-> Documentação completa da integração RADIUS entre pfSense e Domain Controller para autenticação OpenVPN com Active Directory.
+> Documentação completa da integração RADIUS entre pfSense e Domain Controller para autenticação OpenVPN com Active Directory. 
 
 ---
 
@@ -16,24 +20,24 @@
          │
          ▼
 ┌─────────────────┐
-│    pfSense      │  2. Recebe credenciais
+│    pfSense      │  2.  Recebe credenciais
 │  OpenVPN Server │  3. Envia RADIUS Access-Request
-│  192.168.1.1    │
+│  192.168.1. 1    │
 └────────┬────────┘
          │ RADIUS (UDP 1812/1813)
          ▼
 ┌─────────────────┐
-│  FreeRADIUS     │  4. Valida contra LDAP/AD
+│  FreeRADIUS     │  4.  Valida contra LDAP/AD
 │  Domain         │  5. Identifica grupo AD do utilizador
 │  Controller     │  6. Retorna Framed-IP-Address do pool
-│  192.168.1.10   │
+│  192.168. 1.10   │
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│  Samba AD DC    │  7. Verifica credenciais LDAP
+│  Samba AD DC    │  7.  Verifica credenciais LDAP
 │  LDAP/Kerberos  │  8. Retorna grupos e atributos
-│  dc.fsociety.pt │
+│  dc. fsociety.pt │
 └─────────────────┘
          │
          ▼
@@ -58,7 +62,7 @@ System → User Manager → Authentication Servers → Add
 | **Descriptive name** | RADIUS-DC-FSociety |
 | **Type** | RADIUS |
 | **Protocol** | PAP (Password Authentication Protocol) |
-| **Hostname or IP address** | 192.168.1.10 |
+| **Hostname or IP address** | 192. 168.1.10 |
 | **Shared Secret** | (senha forte configurada no FreeRADIUS) |
 | **Services offered** | Authentication and Accounting |
 | **Authentication port** | 1812 |
@@ -67,11 +71,11 @@ System → User Manager → Authentication Servers → Add
 
 #### Shared Secret
 
-**Importante**: O shared secret deve ser o mesmo configurado no FreeRADIUS.
+**Importante**: O shared secret deve ser o mesmo configurado no FreeRADIUS. 
 
 ```
 Exemplo:
-Shared Secret: Str0ng!R4d1u5$ecret#2024
+Shared Secret: Str0ng! R4d1u5$ecret#2024
 
 Guardar em local seguro (password manager)
 ```
@@ -133,13 +137,13 @@ freeradius -v
 
 ```bash
 # Editar ficheiro de clientes
-sudo nano /etc/freeradius/3.0/clients.conf
+sudo nano /etc/freeradius/3.0/clients. conf
 ```
 
 **Adicionar**:
 ```
 client pfsense {
-    ipaddr = 192.168.1.1
+    ipaddr = 192. 168.1.1
     secret = Str0ng!R4d1u5$ecret#2024
     shortname = pfSense
     nastype = other
@@ -170,6 +174,8 @@ sudo nano /etc/freeradius/3.0/mods-enabled/ldap
 ```
 
 **Configuração**:
+
+{% raw %}
 ```
 ldap {
     server = 'localhost'
@@ -194,7 +200,7 @@ ldap {
     
     # Filtros de pesquisa
     user {
-        base_dn = "${..base_dn}"
+        base_dn = "${.. base_dn}"
         filter = "(sAMAccountName=%{%{Stripped-User-Name}:-%{User-Name}})"
         
         # Atributos LDAP necessários
@@ -229,15 +235,18 @@ ldap {
     }
 }
 ```
+{% endraw %}
 
-### 4. Configurar IP Pools por Grupo AD
+### 4.  Configurar IP Pools por Grupo AD
 
 ```bash
 # Criar ficheiro de unlang para atribuir IPs
-sudo nano /etc/freeradius/3.0/policy.d/ip_pools
+sudo nano /etc/freeradius/3.0/policy. d/ip_pools
 ```
 
 **Conteúdo**:
+
+{% raw %}
 ```
 # Política de atribuição de IP pools por grupo AD
 
@@ -247,7 +256,7 @@ if (LDAP-Group == "GRP_TI") {
         Framed-IP-Address := "10.8.0.%{randstr:nnnn}"
     }
     # Garantir que está no range correto (10-59)
-    if ("%{reply:Framed-IP-Address}" < "10.8.0.10" || "%{reply:Framed-IP-Address}" > "10.8.0.59") {
+    if ("%{reply:Framed-IP-Address}" < "10.8. 0.10" || "%{reply:Framed-IP-Address}" > "10.8.0.59") {
         update reply {
             Framed-IP-Address := "10.8.0.%{expr:(10 + %{randstr:nn} %% 50)}"
         }
@@ -262,7 +271,7 @@ elsif (LDAP-Group == "GRP_Gestores") {
 # Pool Financeiro (Level 3)
 elsif (LDAP-Group == "GRP_Financeiro") {
     update reply {
-        Framed-IP-Address := "10.8.0.%{expr:(110 + %{randstr:nn} %% 50)}"
+        Framed-IP-Address := "10.8.0. %{expr:(110 + %{randstr:nn} %% 50)}"
     }
 }
 # Pool Comercial (Level 3)
@@ -274,7 +283,7 @@ elsif (LDAP-Group == "GRP_Comercial") {
 # Pool VPN_Users (Level 4)
 elsif (LDAP-Group == "GRP_VPN_Users") {
     update reply {
-        Framed-IP-Address := "10.8.0.%{expr:(210 + %{randstr:nn} %% 45)}"
+        Framed-IP-Address := "10.8. 0.%{expr:(210 + %{randstr:nn} %% 45)}"
     }
 }
 else {
@@ -282,6 +291,7 @@ else {
     reject
 }
 ```
+{% endraw %}
 
 **Alternativa: IP Pools do FreeRADIUS**:
 ```bash
@@ -289,12 +299,14 @@ sudo nano /etc/freeradius/3.0/mods-config/sql/ippool/postgresql/ippool.conf
 ```
 
 **IP Pools**:
+
+{% raw %}
 ```
 # Pool TI
 ippool ti_pool {
-    range-start = 10.8.0.10
+    range-start = 10. 8.0.10
     range-stop = 10.8.0.59
-    netmask = 255.255.255.0
+    netmask = 255.255.255. 0
     cache-size = 50
     session-timeout = 3600
     ip-index = "%{NAS-IP-Address} %{NAS-Port}"
@@ -303,8 +315,8 @@ ippool ti_pool {
 
 # Pool Gestores
 ippool gestores_pool {
-    range-start = 10.8.0.60
-    range-stop = 10.8.0.109
+    range-start = 10.8.0. 60
+    range-stop = 10. 8.0.109
     netmask = 255.255.255.0
     cache-size = 50
     session-timeout = 3600
@@ -312,31 +324,32 @@ ippool gestores_pool {
 
 # Pool Financeiro
 ippool financeiro_pool {
-    range-start = 10.8.0.110
+    range-start = 10.8. 0.110
     range-stop = 10.8.0.159
-    netmask = 255.255.255.0
+    netmask = 255.255.255. 0
     cache-size = 50
     session-timeout = 3600
 }
 
 # Pool Comercial
 ippool comercial_pool {
-    range-start = 10.8.0.160
+    range-start = 10.8. 0.160
     range-stop = 10.8.0.209
-    netmask = 255.255.255.0
+    netmask = 255.255.255. 0
     cache-size = 50
     session-timeout = 3600
 }
 
 # Pool VPN_Users
 ippool vpn_users_pool {
-    range-start = 10.8.0.210
-    range-stop = 10.8.0.254
+    range-start = 10.8.0. 210
+    range-stop = 10. 8.0.254
     netmask = 255.255.255.0
     cache-size = 45
     session-timeout = 3600
 }
 ```
+{% endraw %}
 
 ### 5. Configurar Site Default
 
@@ -382,6 +395,8 @@ authenticate {
 ```
 
 **Na seção `post-auth`**:
+
+{% raw %}
 ```
 post-auth {
     # Log sucesso
@@ -395,13 +410,14 @@ post-auth {
     exec
     
     Post-Auth-Type REJECT {
-        attr_filter.access_reject
+        attr_filter. access_reject
         
         # Log rejects
         linelog
     }
 }
 ```
+{% endraw %}
 
 ### 6. Ajustar Permissões
 
@@ -411,10 +427,10 @@ sudo chown -R freerad:freerad /etc/freeradius/3.0/
 
 # Permissões de leitura
 sudo chmod 640 /etc/freeradius/3.0/clients.conf
-sudo chmod 640 /etc/freeradius/3.0/mods-enabled/ldap
+sudo chmod 640 /etc/freeradius/3. 0/mods-enabled/ldap
 ```
 
-### 7. Testar Configuração
+### 7.  Testar Configuração
 
 ```bash
 # Verificar sintaxe
@@ -454,31 +470,31 @@ sudo systemctl status freeradius
 
 ```bash
 # Testar com radtest
-radtest ryan@fsociety.pt password123 localhost 1812 Str0ng!R4d1u5$ecret#2024
+radtest ryan@fsociety. pt password123 localhost 1812 Str0ng!R4d1u5$ecret#2024
 ```
 
 **Resultado esperado**:
 ```
-Sent Access-Request Id 123 from 0.0.0.0:12345 to 127.0.0.1:1812 length 76
+Sent Access-Request Id 123 from 0.0.0. 0:12345 to 127.0.0. 1:1812 length 76
         User-Name = "ryan@fsociety.pt"
         User-Password = "password123"
-        NAS-IP-Address = 127.0.0.1
+        NAS-IP-Address = 127.0.0. 1
         NAS-Port = 1812
         Message-Authenticator = 0x00
-Received Access-Accept Id 123 from 127.0.0.1:1812 to 0.0.0.0:12345 length 48
-        Framed-IP-Address = 10.8.0.15
-        Reply-Message = "Welcome ryan@fsociety.pt, IP: 10.8.0.15"
+Received Access-Accept Id 123 from 127.0.0.1:1812 to 0.0.0. 0:12345 length 48
+        Framed-IP-Address = 10.8.0. 15
+        Reply-Message = "Welcome ryan@fsociety.pt, IP: 10.8. 0.15"
 ```
 
 ### 2. Teste Remoto (do pfSense)
 
 ```bash
 # SSH no pfSense
-ssh admin@192.168.1.1
+ssh admin@192.168. 1.1
 
 # Testar RADIUS
-echo "User-Name = ryan@fsociety.pt, User-Password = password123" | \
-radclient -x 192.168.1.10:1812 auth Str0ng!R4d1u5$ecret#2024
+echo "User-Name = ryan@fsociety. pt, User-Password = password123" | \
+radclient -x 192.168. 1.10:1812 auth Str0ng!R4d1u5$ecret#2024
 ```
 
 ### 3. Teste via WebUI pfSense
@@ -512,27 +528,27 @@ Test → Deve retornar sucesso
 | Grupo AD | Pool IP | Alias pfSense | Nível | Acessos |
 |----------|---------|---------------|-------|---------|
 | **GRP_TI** | 10.8.0.10-59 | Alias_VPN_TI | L1 - Admin | LAN + DMZ + Internet (Full) |
-| **GRP_Gestores** | 10.8.0.60-109 | Alias_VPN_Gestores | L2 - Gestão | LAN + DMZ + Internet |
+| **GRP_Gestores** | 10.8.0. 60-109 | Alias_VPN_Gestores | L2 - Gestão | LAN + DMZ + Internet |
 | **GRP_Financeiro** | 10.8.0.110-159 | Alias_VPN_Financeiro | L3 - Dept | DC (SMB/DNS) + Internet |
-| **GRP_Comercial** | 10.8.0.160-209 | Alias_VPN_Comercial | L3 - Dept | DC (SMB/DNS) + Internet |
-| **GRP_VPN_Users** | 10.8.0.210-254 | Alias_VPN_VPN_Users | L4 - Users | Mail + Nextcloud + Internet |
+| **GRP_Comercial** | 10.8. 0.160-209 | Alias_VPN_Comercial | L3 - Dept | DC (SMB/DNS) + Internet |
+| **GRP_VPN_Users** | 10. 8.0.210-254 | Alias_VPN_VPN_Users | L4 - Users | Mail + Nextcloud + Internet |
 
 ### Fluxo Completo
 
 ```
 1. Utilizador "ryan" (membro de GRP_TI) conecta VPN
    ↓
-2. pfSense envia RADIUS request para 192.168.1.10
+2.  pfSense envia RADIUS request para 192.168.1. 10
    ↓
 3. FreeRADIUS valida contra AD
    ↓
 4. FreeRADIUS identifica: ryan ∈ GRP_TI
    ↓
-5. FreeRADIUS atribui IP do ti_pool: 10.8.0.15
+5.  FreeRADIUS atribui IP do ti_pool: 10.8. 0.15
    ↓
-6. pfSense recebe Framed-IP-Address: 10.8.0.15
+6. pfSense recebe Framed-IP-Address: 10.8. 0.15
    ↓
-7. pfSense atribui 10.8.0.15 ao cliente
+7. pfSense atribui 10.8.0. 15 ao cliente
    ↓
 8. pfSense aplica regras:
    Source: 10.8.0.15 (pertence a Alias_VPN_TI)
@@ -558,23 +574,25 @@ sudo tail -f /var/log/syslog | grep radiusd
 sudo freeradius -X
 ```
 
+{% raw %}
 **Exemplo de log sucesso**:
 ```
-(0) Received Access-Request Id 45 from 192.168.1.1:54321 to 192.168.1.10:1812
+(0) Received Access-Request Id 45 from 192.168.1. 1:54321 to 192.168.1. 10:1812
 (0)   User-Name = "ryan@fsociety.pt"
 (0)   User-Password = "***"
-(0) # Executing section authorize from file /etc/freeradius/3.0/sites-enabled/default
+(0) # Executing section authorize from file /etc/freeradius/3. 0/sites-enabled/default
 (0)   ldap: EXPAND (sAMAccountName=%{User-Name})
 (0)   ldap: Performing search in "dc=fsociety,dc=pt"
 (0)   ldap: User found: cn=Ryan Barbosa,ou=TI,ou=FSociety,dc=fsociety,dc=pt
 (0)   ldap: Group membership: GRP_TI
 (0)   ip_pools: Assigning IP from ti_pool
 (0)   update reply {
-(0)     Framed-IP-Address := 10.8.0.15
+(0)     Framed-IP-Address := 10.8. 0.15
 (0)   }
 (0) Sent Access-Accept Id 45
-(0)   Framed-IP-Address = 10.8.0.15
+(0)   Framed-IP-Address = 10. 8.0.15
 ```
+{% endraw %}
 
 ### Logs pfSense
 
@@ -584,7 +602,7 @@ Status → System Logs → System
 Filtrar: radius
 
 Dec 02 14:30:15 pfsense radiusd[12345]: Received Access-Accept from RADIUS server 192.168.1.10
-Dec 02 14:30:15 pfsense radiusd[12345]: User ryan@fsociety.pt authenticated successfully
+Dec 02 14:30:15 pfsense radiusd[12345]: User ryan@fsociety. pt authenticated successfully
 ```
 
 ### Logs OpenVPN
@@ -592,7 +610,7 @@ Dec 02 14:30:15 pfsense radiusd[12345]: User ryan@fsociety.pt authenticated succ
 ```
 Status → System Logs → OpenVPN
 
-Dec 02 14:30:16 pfsense openvpn[23456]: ryan@fsociety.pt/203.0.113.100:45678 MULTI: primary virtual IP for ryan@fsociety.pt: 10.8.0.15
+Dec 02 14:30:16 pfsense openvpn[23456]: ryan@fsociety. pt/203.0.113.100:45678 MULTI: primary virtual IP for ryan@fsociety. pt: 10.8. 0.15
 ```
 
 ---
@@ -609,14 +627,14 @@ Dec 02 14:30:16 pfsense openvpn[23456]: ryan@fsociety.pt/203.0.113.100:45678 MUL
 
 ```
 Exemplo:
-Str0ng!R4d1u5$ecret#2024FSociety!@#
+Str0ng!R4d1u5$ecret#2024FSociety! @#
 ```
 
 ### Rate Limiting
 
 ```bash
 # No FreeRADIUS
-sudo nano /etc/freeradius/3.0/radiusd.conf
+sudo nano /etc/freeradius/3. 0/radiusd.conf
 ```
 
 ```
@@ -628,7 +646,7 @@ security {
 
 # Limitar conexões por cliente
 client pfsense {
-    ...
+    ... 
     limit {
         max_connections = 100
         lifetime = 0
@@ -644,7 +662,7 @@ client pfsense {
 sudo apt install fail2ban -y
 
 # Criar jail para FreeRADIUS
-sudo nano /etc/fail2ban/jail.d/freeradius.conf
+sudo nano /etc/fail2ban/jail. d/freeradius.conf
 ```
 
 ```
@@ -735,7 +753,7 @@ sudo ldapsearch -x -H ldap://localhost \
 # Debug com freeradius -X
 # Procurar linhas:
 # "ip_pools: Assigning IP from [pool_name]"
-# "update reply { Framed-IP-Address := X.X.X.X }"
+# "update reply { Framed-IP-Address := X.X.X. X }"
 
 # Verificar grupos do utilizador
 ldapsearch -x -LLL -b "dc=fsociety,dc=pt" \
@@ -770,7 +788,7 @@ Este projeto está licenciado sob a [MIT License](../../LICENSE).
 
 - [FreeRADIUS Documentation](https://freeradius.org/documentation/)
 - [FreeRADIUS + LDAP](https://wiki.freeradius.org/config/LDAP-Directory)
-- [pfSense RADIUS Authentication](https://docs.netgate.com/pfsense/en/latest/usermanager/radius.html)
+- [pfSense RADIUS Authentication](https://docs. netgate.com/pfsense/en/latest/usermanager/radius. html)
 - [RADIUS Protocol (RFC 2865)](https://www.rfc-editor.org/rfc/rfc2865)
 
 ---
@@ -783,4 +801,4 @@ Este projeto está licenciado sob a [MIT License](../../LICENSE).
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
