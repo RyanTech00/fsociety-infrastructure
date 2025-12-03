@@ -6,7 +6,7 @@
 
 ## 📋 Visão Geral
 
-Um **datastore** é o local onde o PBS armazena backups. Cada datastore é um diretório no filesystem que cont ém:
+Um **datastore** é o local onde o PBS armazena backups. Cada datastore é um diretório no filesystem que contém:
 - Chunks de dados deduplica dos
 - Índices de backups
 - Metadados
@@ -16,7 +16,7 @@ Um **datastore** é o local onde o PBS armazena backups. Cada datastore é um di
 
 ```
 /backup/pve-store/                  <- Datastore root
-├── .chunks/                        <- Chunks deduplica dos (dados reais)
+├── .chunks/                        <- Chunks deduplicados (dados reais)
 │   ├── 0000/
 │   ├── 0001/
 │   ├── ...

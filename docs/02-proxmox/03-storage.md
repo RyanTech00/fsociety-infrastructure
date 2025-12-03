@@ -495,7 +495,7 @@ iostat -x 2
 
 4. **Utilizar PBS para backups**
    - Deduplicação economiza espaço
-   - Retenção automática configur ável
+   - Retenção automática configurável
 
 ### Thin Provisioning
 

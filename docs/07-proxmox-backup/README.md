@@ -1,6 +1,6 @@
 # 💾 Proxmox Backup Server - FSociety.pt
 
-> **Sistema de Backup Deduplica do e Encriptado**  
+> **Sistema de Backup Deduplicado e Encriptado**  
 >  
 > Documentação completa do Proxmox Backup Server da infraestrutura FSociety.pt, incluindo datastore, integração com Proxmox VE e gestão de backups.
 
