@@ -433,7 +433,7 @@ sudo docker compose exec mysql-mailcow mysqlcheck -u root -p --all-databases --r
 
 ```bash
 # Ver containers com mais RAM
-sudo docker stats --no-stream --format "table {{.Name}}\t{{.MemUsage}}" | sort -k2 -h
+sudo docker stats --no-stream --format "table {% raw %}{{.Name}}\t{{.MemUsage}}{% endraw %}" | sort -k2 -h
 
 # Aumentar swap (temporário)
 sudo swapoff -a
