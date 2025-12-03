@@ -359,6 +359,7 @@ accounting {
 sudo nano /etc/freeradius/3.0/mods-enabled/detail
 ```
 
+{% raw %}
 ```
 detail {
     filename = ${radacctdir}/%{%{Packet-Src-IP-Address}:-%{Packet-Src-IPv6-Address}}/detail-%Y%m%d
@@ -369,6 +370,7 @@ detail {
     log_packet_header = no
 }
 ```
+{% endraw %}
 
 **Logs gerados**:
 
