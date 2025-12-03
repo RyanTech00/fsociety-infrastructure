@@ -39,6 +39,16 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 
 ## 🏗️ Arquitetura
 
+### Diagrama da Infraestrutura
+
+<div align="center">
+
+![FSociety Infrastructure](docs/assets/images/fsociety-infrastructure.png)
+
+*Arquitetura Four-Legged Firewall com segmentação WAN/LAN/DMZ/VPN*
+
+</div>
+
 ### Diagrama de Rede
 
 ```
@@ -124,7 +134,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | Componente | Tecnologia | Função |
 |------------|------------|--------|
 | **Virtualização** | Proxmox VE 8.x | Hypervisor Type-1 com KVM/LXC |
-| **Firewall** | pfSense CE 2.7.x | Segmentação e controlo de tráfego |
+| **Firewall** | pfSense CE 2.8.1 | Segmentação e controlo de tráfego |
 | **Identidade** | Samba AD DC 4.x | Active Directory + DNS + DHCP |
 | **Autenticação** | FreeRADIUS 3.x | RADIUS para VPN e WiFi |
 
@@ -135,7 +145,8 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | **Email** | Mailcow (Postfix + Dovecot) | DMZ |
 | **Email Gateway** | Proxmox Mail Gateway 8.x | DMZ |
 | **Web Server** | Nginx | DMZ |
-| **Ficheiros** | Nextcloud 28.x + LDAP | LAN |
+| **Ficheiros** | Nextcloud 32.0.0 + LDAP | LAN |
+| **Suporte** | Zammad 6.5.2 | LAN |
 | **Backup** | Proxmox Backup Server | LAN |
 | **VPN** | OpenVPN 2.x | pfSense |
 
@@ -169,28 +180,13 @@ fsociety-infrastructure/
 ├── 📄 README.md                    # Este ficheiro
 ├── 📄 LICENSE                      # Licença MIT
 │
-├── 📁 docs/                        # Documentação (GitHub Pages)
-│   ├── index.md                    # Página inicial
-│   ├── 01-arquitetura/             # Visão geral e planeamento
-│   ├── 02-proxmox/                 # Setup do hypervisor
-│   ├── 03-pfsense/                 # Configuração do firewall
-│   ├── 04-active-directory/        # Samba AD + LDAP + RADIUS
-│   ├── 05-dmz/                     # Email, Web, Mail Gateway
-│   ├── 06-vpn/                     # OpenVPN + autenticação
-│   ├── 07-nextcloud/               # Colaboração + LDAP
-│   ├── 08-cloudflare/              # WAF, CDN, DNS
-│   ├── 09-crowdsec/                # IDS/IPS distribuído
-│   └── assets/images/              # Screenshots e diagramas
-│
-├── 📁 configs/                     # Ficheiros de configuração exemplo
-│   ├── pfsense/
-│   ├── postfix/
-│   ├── dovecot/
-│   ├── nginx/
-│   ├── crowdsec/
-│   └── samba/
-│
-└── 📁 scripts/                     # Scripts de automação
+└── 📁 docs/                        # Documentação (GitHub Pages)
+    ├── index.md                    # Página inicial
+    ├── 03-pfsense/                 # 10 documentos
+    ├── 04-domain-controller/       # 9 documentos
+    ├── 05-servidor-ficheiros/      # Nextcloud + Zammad
+    ├── 06-webserver/               # Nginx Reverse Proxy
+    └── assets/images/              # Imagens do projeto
 ```
 
 ---
@@ -220,8 +216,9 @@ fsociety-infrastructure/
 | Campo | Informação |
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
-| **Autor** | Ryan |
+| **Unidade Curricular** | Administração de Sistemas II |
 | **Ano Letivo** | 2024/2025 |
+| **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 | **Domínio** | fsociety.pt |
 
 ---
@@ -238,6 +235,12 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ---
 
-<sub>🔐 FSociety.pt - Infraestrutura Empresarial Segura | Projeto Universitário ESTG/IPP</sub>
+<img src="docs/assets/images/fsociety-logo.png" alt="FSociety Logo" width="150">
+
+*"Control is an illusion."*
+
+---
+
+<sub>🔐 FSociety.pt - Infraestrutura Empresarial Segura | Projeto Universitário ESTG/IPP 2024/2025</sub>
 
 </div>
