@@ -1,3 +1,12 @@
 title: FSociety.pt
-description: Infraestrutura Empresarial Segura
-theme: jekyll-theme-hacker
+description: Infraestrutura Empresarial Segura | Four-Legged Firewall
+remote_theme: pages-themes/hacker@v0.2.0
+plugins:
+  - jekyll-remote-theme
+
+# Metadados
+author: Ryan Barbosa, Hugo Correia, Igor Araújo
+logo: /assets/images/fsociety-logo. png
+
+# Mostrar link para repo
+show_downloads: false
