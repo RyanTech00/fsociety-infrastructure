@@ -490,7 +490,9 @@ df -h /
 
 **Ação Tomada:**
 ```bash
-# No Proxmox VE (expandir disco VM de 50GB para 850GB)
+# No Proxmox VE
+# Nota: O comando abaixo foi um dos passos de expansão
+# Resultado final: disco VM de 850GB
 qm resize 101 scsi0 +400G
 
 # No PBS

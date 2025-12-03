@@ -246,7 +246,8 @@ Expandir o disco do PBS quando:
 # Verificar tamanho atual
 qm config 101 | grep scsi0
 
-# Expandir disco (exemplo: adicionar 400GB)
+# Expandir disco (exemplo genérico: adicionar 400GB)
+# Ajustar +SIZE conforme necessário (ex: +800G para expansão maior)
 qm resize 101 scsi0 +400G
 
 # Confirmar mudança
@@ -294,7 +295,8 @@ Filesystem      Size  Used Avail Use% Mounted on
 **Comandos Executados:**
 
 ```bash
-# No Proxmox VE (expandir disco de 50GB para 850GB)
+# No Proxmox VE
+# Nota: Expansão realizada em etapas até atingir 850GB
 qm resize 101 scsi0 +400G
 
 # No PBS
