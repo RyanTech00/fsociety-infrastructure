@@ -229,6 +229,22 @@ sudo docker compose exec mysql-mailcow \
 
 ---
 
+## 🔑 Credenciais da Base de Dados
+
+| Campo | Valor |
+|-------|-------|
+| **User** | mailcow |
+| **Database** | mailcow |
+| **Porta Local** | 13306 |
+
+### Aceder à Base de Dados
+
+```bash
+sudo docker compose exec mysql-mailcow mysql -u mailcow -p mailcow
+```
+
+---
+
 ## 💾 Redis Cache
 
 ```bash
@@ -323,6 +339,66 @@ sudo docker compose exec rspamd-mailcow \
 ### SPF, DKIM, DMARC
 
 Configurações automáticas após adicionar domínio. Ver detalhes em [07-dns-records.md](07-dns-records.md).
+
+---
+
+## 📮 SMTP Relay - smtp2go
+
+Devido ao IP residencial (188.81.65.191) estar presente em blacklists e à impossibilidade de configurar reverse DNS (ISP Telepac), foi implementado um relay SMTP através do serviço smtp2go.
+
+### Porquê smtp2go?
+
+| Problema | Solução |
+|----------|---------|
+| ❌ IP residencial em blacklists | ✅ smtp2go tem IPs com boa reputação |
+| ❌ rDNS não configurável (ISP) | ✅ smtp2go gere o rDNS |
+| ❌ Porta 587 bloqueada pelo ISP | ✅ Usar porta alternativa 2525 |
+| ❌ Emails caem em spam | ✅ Entrega fiável |
+
+### Configuração smtp2go
+
+| Campo | Valor |
+|-------|-------|
+| **Servidor** | mail-eu.smtp2go.com |
+| **Porta** | 2525 |
+| **Username** | pmg-fsociety |
+
+### Configurar no Mailcow (GUI)
+
+1. Ir a **System → Configuration → Routing**
+2. Em **Add transport**, configurar:
+
+| Campo | Valor |
+|-------|-------|
+| Host | `[mail-eu.smtp2go.com]:2525` |
+| Username | pmg-fsociety |
+| Password | (password do smtp2go) |
+
+3. Salvar
+4. Ir a **E-Mail → Configuration → Domains**
+5. Editar domínio `fsociety.pt`
+6. Em **Relayhost**, selecionar o transport criado
+7. Salvar
+
+### Verificar Configuração
+
+```bash
+# Ver relayhost configurado
+sudo docker compose exec postfix-mailcow postconf relayhost
+
+# Verificar na base de dados
+sudo docker compose exec mysql-mailcow mysql -u mailcow -p mailcow -e "SELECT * FROM relayhosts;"
+```
+
+### Resultado Esperado
+
+```
++----+----------------------------+--------------+--------+
+| id | hostname                   | username     | active |
++----+----------------------------+--------------+--------+
+|  1 | [mail-eu.smtp2go.com]:2525 | pmg-fsociety |      1 |
++----+----------------------------+--------------+--------+
+```
 
 ---
 
