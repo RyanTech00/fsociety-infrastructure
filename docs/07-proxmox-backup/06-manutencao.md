@@ -312,9 +312,9 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 **Métricas:**
-- **Antes**: 41 GB (100% cheio)
-- **Depois**: 834 GB (5% usado, 762 GB livres)
-- **Expansão**: +793 GB
+- **Antes**: 41 GB capacidade (100% cheio)
+- **Depois**: 834 GB capacidade (5% usado, 762 GB livres)
+- **Expansão**: +784 GB (de 50 GB para 834 GB)
 - **Estado**: ✅ Resolvido
 
 ---

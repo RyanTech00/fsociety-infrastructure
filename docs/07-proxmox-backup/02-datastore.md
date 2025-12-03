@@ -501,7 +501,7 @@ resize2fs /dev/pbs/root
 ```
 
 **Resultado:**
-- Disco: 450 GB
+- Disco: 834 GB
 - Utilização: 41 GB (5% usado)
 - Disponível: 762 GB livres
 - Estado: ✅ Resolvido
