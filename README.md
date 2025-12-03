@@ -1,5 +1,11 @@
 <div align="center">
 
+<div align="center">
+  
+![FSociety Infrastructure](docs/assets/images/fsociety-infrastructure.png)
+
+</div>
+
 # 🔐 FSociety.pt
 
 ### Infraestrutura Empresarial Segura | Four-Legged Firewall Architecture
@@ -43,7 +49,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 
 <div align="center">
 
-![FSociety Infrastructure](docs/assets/images/fsociety-infrastructure.png)
+![FSociety Infrastructure](docs/assets/images/arquitetura-rede-fsociety.png)
 
 *Arquitetura Four-Legged Firewall com segmentação WAN/LAN/DMZ/VPN*
 
@@ -59,20 +65,20 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
               ┌────────────────────────┼────────────────────────┐
               │                        │                        │
               ▼                        ▼                        ▼
-    ┌─────────────────┐     ┌─────────────────┐      ┌─────────────────┐
-    │   CLOUDFLARE    │     │   DNS Only      │      │   DNS Only      │
-    │  (HTTP/HTTPS)   │     │   (SMTP/IMAP)   │      │   (OpenVPN)     │
-    │  WAF + CDN      │     │                 │      │                 │
-    └────────┬────────┘     └────────┬────────┘      └────────┬────────┘
+     ┌─────────────────┐     ┌─────────────────┐      ┌─────────────────┐
+     │   CLOUDFLARE    │     │   DNS Only      │      │   DNS Only      │
+     │  (HTTP/HTTPS)   │     │   (SMTP/IMAP)   │      │   (OpenVPN)     │
+     │  WAF + CDN      │     │                 │      │                 │
+     └────────┬────────┘     └────────┬────────┘      └────────┬────────┘
               │                       │                        │
               └───────────────────────┼────────────────────────┘
                                       │
                                       ▼
-                    ┌─────────────────────────────────┐
-                    │            pfSense              │
-                    │      Four-Legged Firewall       │
-                    │                                 │
-                    │   WAN: 188.81.65.191 (Pública)  │
+                    ┌────────────────────────────────┐
+                    │            pfSense             │
+                    │      Four-Legged Firewall      │
+                    │                                │
+                    │   WAN: 188.81.65.191 (Pública) │
                     │   ┌─────┬─────┬─────┐          │
                     │   │ LAN │ DMZ │ VPN │          │
                     └───┴──┬──┴──┬──┴──┬──┴──────────┘
@@ -88,16 +94,16 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 │ │  Samba AD   │ │    │ │ Mail Server │ │    │                 │
 │ │ DNS + DHCP  │ │    │ │  (Mailcow)  │ │    │ • TI: .10-.59   │
 │ │ FreeRADIUS  │ │    │ └─────────────┘ │    │ • Gestão: .60+  │
-│ │ CrowdSec    │ │    │ ┌─────────────┐ │    │ • Finance: .110+│
-│ └─────────────┘ │    │ │  Proxmox    │ │    │ • Comercial     │
-│ ┌─────────────┐ │    │ │ Mail Gateway│ │    │ • RH: .210+     │
-│ │  Nextcloud  │ │    │ └─────────────┘ │    │                 │
-│ │   + LDAP    │ │    │ ┌─────────────┐ │    │ Autenticação:   │
-│ │ CrowdSec    │ │    │ │ Web Server  │ │    │ RADIUS + LDAP   │
-│ └─────────────┘ │    │ │  (Nginx)    │ │    │                 │
-│ ┌─────────────┐ │    │ │ CrowdSec    │ │    │                 │
-│ │Proxmox Backup│ │   │ │ 3 Bouncers  │ │    │                 │
+│ │ CrowdSec    │ │    │                 |    │ • Finance: .110+│
+│ └─────────────┘ │    │ ┌─────────────┐ │    │ • Comercial     │
+│ ┌─────────────┐ │    │ │ Web Server  │ │    │ • RH: .210+     │
+│ │  Nextcloud  │ │    │ │  (Nginx)    │ │    │                 │
+│ │   + LDAP    │ │    │ │ CrowdSec    │ │    │ Autenticação:   │
+│ │ CrowdSec    │ │    │ │ 3 Bouncers  │ │    │ RADIUS + LDAP   │
 │ └─────────────┘ │    │ └─────────────┘ │    │                 │
+│ ┌─────────────┐ │    │                 │    │                 │
+│ │Proxmox Backup││    │                 │    │                 │
+│ └─────────────┘ │    │                 │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
@@ -106,22 +112,22 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │  CAMADA 1: EDGE (Cloudflare)                                            │
-│  ├── WAF com OWASP Managed Rules + Regras Personalizadas               │
-│  ├── Mitigação DDoS (L3/L4/L7)                                         │
-│  ├── CDN com cache em 330+ datacenters                                 │
-│  └── SSL/TLS Full (Strict) com TLS 1.3                                 │
+│  ├── WAF com OWASP Managed Rules + Regras Personalizadas                │
+│  ├── Mitigação DDoS (L3/L4/L7)                                          │
+│  ├── CDN com cache em 330+ datacenters                                  │
+│  └── SSL/TLS Full (Strict) com TLS 1.3                                  │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  CAMADA 2: PERÍMETRO (pfSense)                                          │
-│  ├── Stateful Firewall com Default Deny                                │
-│  ├── Segmentação em 4 zonas isoladas                                   │
-│  ├── NAT/Port Forwarding controlado                                    │
-│  └── VPN com autenticação RADIUS/LDAP                                  │
+│  ├── Stateful Firewall com Default Deny                                 │
+│  ├── Segmentação em 4 zonas isoladas                                    │
+│  ├── NAT/Port Forwarding controlado                                     │
+│  └── VPN com autenticação RADIUS/LDAP                                   │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  CAMADA 3: HOST (CrowdSec)                                              │
-│  ├── 57+ cenários de deteção (CVEs, brute-force, scans)                │
-│  ├── 3 Bouncers: Cloudflare + Firewall + Nginx                         │
-│  ├── Community Blocklist: ~70.000 IPs maliciosos                       │
-│  └── Análise comportamental de logs em tempo real                      │
+│  ├── 57+ cenários de deteção (CVEs, brute-force, scans)                 │
+│  ├── 3 Bouncers: Cloudflare + Firewall + Nginx                          │
+│  ├── Community Blocklist: ~70.000 IPs maliciosos                        │
+│  └── Análise comportamental de logs em tempo real                       │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -231,16 +237,14 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 <div align="center">
 
+<img src="docs/assets/images/fsociety-logo.png" alt="FSociety Logo" width="150">
+
+*"Control is an illusion, and whoever has the illusion has the control."*
+
 **[⬆ Voltar ao topo](#-fsocietypt)**
 
 ---
 
-<img src="docs/assets/images/fsociety-logo.png" alt="FSociety Logo" width="150">
-
-*"Control is an illusion."*
-
----
-
-<sub>🔐 FSociety.pt - Infraestrutura Empresarial Segura | Projeto Universitário ESTG/IPP 2024/2025</sub>
+<sub>🔐 FSociety.pt - Infraestrutura Empresarial Segura | Projeto Universitário em Cibersegurança, Redes e Sistemas Informáticos na ESTG/IPP - 2026/2025</sub>
 
 </div>
