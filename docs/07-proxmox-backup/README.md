@@ -18,7 +18,7 @@
 | **VM ID** | 101 (no Proxmox VE) |
 | **RAM** | 1.5 GB |
 | **vCPU** | 1 core |
-| **Disco** | 50 GB (VM) + Datastore |
+| **Disco** | 850 GB (expandido de 50 GB) |
 | **Zona de Rede** | LAN (192.168.1.0/24) |
 
 ---
@@ -90,12 +90,12 @@
 |-----------|-------|
 | **Nome** | pve-store |
 | **Path** | /backup/pve-store |
-| **Capacidade Total** | 42 GB |
-| **Utilizado** | 40 GB (95%) |
-| **Disponível** | 2 GB |
+| **Capacidade Total** | 834 GB |
+| **Utilizado** | 41 GB (5%) |
+| **Disponível** | 762 GB |
 | **Garbage Collection** | Ativo (semanal) |
 | **Verify Job** | Configurado |
-| **Prune Schedule** | Manual (keep-all=1) |
+| **Prune Schedule** | daily (PBS 4.x) |
 
 **Conteúdo:**
 - Backups de VMs do Proxmox VE
@@ -317,29 +317,29 @@ https://192.168.1.30:8007/api2/json
 
 ---
 
-## ⚠️ Alertas e Limitações Atuais
+## ✅ Estado Atual da Capacidade
 
-### Capacidade Quase Esgotada
+### Capacidade Após Expansão
 
 | Métrica | Valor | Status |
 |---------|-------|--------|
-| **Capacidade** | 42 GB | ⚠️ Pequeno |
-| **Utilizado** | 40 GB | ⚠️ 95% |
-| **Disponível** | 2 GB | ⚠️ Crítico |
+| **Capacidade** | 834 GB | ✅ Adequado |
+| **Utilizado** | 41 GB | ✅ 5% |
+| **Disponível** | 762 GB | ✅ Excelente |
 
-**Recomendações:**
+**Ações Tomadas:**
 
-1. **Expandir datastore**
-   - Adicionar disco à VM PBS
-   - Aumentar `/backup` partition
+1. ✅ **Disco Expandido**
+   - De 50 GB para 850 GB
+   - Procedimento documentado em [Manutenção](06-manutencao.md)
 
-2. **Ajustar retenção**
-   - Implementar política de prune
-   - Remover backups antigos
+2. ✅ **Garbage Collection**
+   - Recuperados 4.6 GB
+   - Taxa de deduplicação: 26.53x
 
-3. **GC regular**
-   - Executar garbage collection
-   - Recuperar espaço de chunks órfãos
+3. ✅ **Prune-Jobs Configurados**
+   - Schedule: daily
+   - Keep-daily: 7, Keep-weekly: 4, Keep-monthly: 6
 
 ---
 

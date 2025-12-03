@@ -6,6 +6,13 @@
 
 ## 📋 Backup Jobs Configurados
 
+### Resumo dos Jobs Agendados
+
+| VMs | Nome | Schedule | Storage | Modo | Compressão |
+|-----|------|----------|---------|------|------------|
+| 102 | pfSense | 02:00 diário | pbs-store | snapshot | zstd |
+| 104, 105, 106 | Web-Server, DC, Files | 02:30 diário | pbs-store | snapshot | zstd |
+
 ### Job 1: pfSense (VMID 102)
 
 | Parâmetro | Valor |
@@ -22,11 +29,22 @@
 | Parâmetro | Valor |
 |-----------|-------|
 | **Schedule** | 02:30 diário |
-| **VMs** | 104, 105, 106 |
+| **VMs** | 104 (Web-Server), 105 (Servidor-de-dominio), 106 (Servidor-de-Ficheiros) |
 | **Storage** | pbs-store |
 | **Mode** | snapshot |
 | **Compression** | zstd |
 | **Retention** | keep-all=1 |
+
+### Estado dos Backups Existentes
+
+| VM | Nome | Último Backup | Quantidade |
+|----|------|---------------|------------|
+| 100 | (removida) | 2025-11-06 | 4 |
+| 102 | pfSense | 2025-12-01 | 4 |
+| 103 | (removida) | 2025-11-06 | 4 |
+| 104 | Web-Server | 2025-12-01 | 4 |
+| 105 | Servidor-de-dominio | 2025-11-06 | 3 |
+| 106 | Servidor-de-Ficheiros | 2025-11-06 | 3 |
 
 ---
 

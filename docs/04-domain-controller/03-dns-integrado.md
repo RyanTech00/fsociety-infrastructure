@@ -85,7 +85,6 @@ sudo samba-tool dns zonecreate dc.fsociety.pt 0.0.10.in-addr.arpa -U Administrat
 | mail | 10.0.0.20 | Servidor de Email (Mailcow) |
 | files | 192.168.1.40 | Servidor de Ficheiros (Nextcloud) |
 | webserver | 10.0.0.30 | Servidor Web |
-| pmg | 10.0.0.40 | Proxmox Mail Gateway |
 | backup | 192.168.1.50 | Proxmox Backup Server |
 
 ### Adicionar Registos A
@@ -102,9 +101,6 @@ sudo samba-tool dns add dc.fsociety.pt fsociety.pt files A 192.168.1.40 -U Admin
 
 # Web Server
 sudo samba-tool dns add dc.fsociety.pt fsociety.pt webserver A 10.0.0.30 -U Administrator
-
-# Proxmox Mail Gateway
-sudo samba-tool dns add dc.fsociety.pt fsociety.pt pmg A 10.0.0.40 -U Administrator
 
 # Backup Server
 sudo samba-tool dns add dc.fsociety.pt fsociety.pt backup A 192.168.1.50 -U Administrator
@@ -152,7 +148,6 @@ sudo samba-tool dns add dc.fsociety.pt 1.168.192.in-addr.arpa 50 PTR backup.fsoc
 |----|-----|----------|
 | 10.0.0.20 | 20 | mail.fsociety.pt |
 | 10.0.0.30 | 30 | webserver.fsociety.pt |
-| 10.0.0.40 | 40 | pmg.fsociety.pt |
 
 ### Adicionar Registos PTR da DMZ
 
@@ -162,9 +157,6 @@ sudo samba-tool dns add dc.fsociety.pt 0.0.10.in-addr.arpa 20 PTR mail.fsociety.
 
 # Web Server
 sudo samba-tool dns add dc.fsociety.pt 0.0.10.in-addr.arpa 30 PTR webserver.fsociety.pt -U Administrator
-
-# Mail Gateway
-sudo samba-tool dns add dc.fsociety.pt 0.0.10.in-addr.arpa 40 PTR pmg.fsociety.pt -U Administrator
 ```
 
 ### Verificar Registos PTR
@@ -183,17 +175,13 @@ host 10.0.0.20 localhost
 
 | Prioridade | Mail Server | Descrição |
 |------------|-------------|-----------|
-| 10 | mail.fsociety.pt | Servidor principal |
-| 20 | pmg.fsociety.pt | Servidor secundário (gateway) |
+| 10 | mail.fsociety.pt | Servidor principal (Mailcow) |
 
 ### Adicionar Registos MX
 
 ```bash
 # MX principal
 sudo samba-tool dns add dc.fsociety.pt fsociety.pt @ MX "mail.fsociety.pt 10" -U Administrator
-
-# MX secundário (gateway)
-sudo samba-tool dns add dc.fsociety.pt fsociety.pt @ MX "pmg.fsociety.pt 20" -U Administrator
 ```
 
 ### Registos SPF, DKIM e DMARC
@@ -240,7 +228,6 @@ sudo samba-tool dns add dc.fsociety.pt fsociety.pt dkim._domainkey TXT "v=DKIM1;
 | Tipo | Nome | Valor |
 |------|------|-------|
 | MX | @ | mail.fsociety.pt (10) |
-| MX | @ | pmg.fsociety.pt (20) |
 | TXT | @ | v=spf1 mx ip4:188.81.65.191 ~all |
 | TXT | _dmarc | v=DMARC1; p=quarantine; ... |
 | TXT | dkim._domainkey | v=DKIM1; k=rsa; p=... |
