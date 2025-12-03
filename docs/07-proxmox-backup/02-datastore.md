@@ -437,7 +437,117 @@ Com deduplicação (70%): 800 GB × 0.3 = 240 GB
 
 ---
 
+## 🔧 Expansão de Disco
+
+### Contexto
+
+Se o datastore ficar sem espaço (disco cheio a 100%), é necessário expandir a capacidade.
+
+### Procedimento de Expansão
+
+#### 1. Expandir Disco no Proxmox VE
+
+```bash
+# No host Proxmox VE
+# Expandir disco da VM PBS (exemplo: adicionar 400GB)
+qm resize 101 scsi0 +400G
+
+# Verificar
+qm config 101 | grep scsi0
+```
+
+#### 2. Expandir Partição e Filesystem no PBS
+
+```bash
+# SSH para o PBS
+ssh root@192.168.1.30
+
+# Instalar growpart se não estiver disponível
+apt update && apt install cloud-guest-utils -y
+
+# Expandir partição (exemplo: /dev/sda3)
+growpart /dev/sda 3
+
+# Expandir Physical Volume (LVM)
+pvresize /dev/sda3
+
+# Expandir Logical Volume
+lvextend -l +100%FREE /dev/pbs/root
+
+# Expandir filesystem (ext4)
+resize2fs /dev/pbs/root
+
+# Verificar novo espaço
+df -h /
+```
+
+### Exemplo Real - Expansão do Projeto FSociety
+
+**Situação Inicial:**
+- Disco: 50 GB
+- Utilização: 41 GB (100% cheio)
+- Estado: ENOSPC (No space left on device)
+
+**Ação Tomada:**
+```bash
+# No Proxmox VE
+# Nota: O comando abaixo foi um dos passos de expansão
+# Resultado final: disco VM de 850GB
+qm resize 101 scsi0 +400G
+
+# No PBS
+growpart /dev/sda 3
+pvresize /dev/sda3
+lvextend -l +100%FREE /dev/pbs/root
+resize2fs /dev/pbs/root
+```
+
+**Resultado:**
+- Disco VM: 850 GB
+- Filesystem: 834 GB (após overhead do LVM)
+- Utilização: 41 GB (5% usado)
+- Disponível: 762 GB livres
+- Estado: ✅ Resolvido
+
+---
+
 ## 🐛 Troubleshooting
+
+### Problema: Datastore cheio (100%) - ENOSPC
+
+**Sintomas:**
+```
+Error: unable to start garbage collection job - ENOSPC: No space left on device
+```
+
+**Soluções (em ordem de prioridade):**
+
+```bash
+# 1. Verificar espaço atual
+df -h /
+
+# 2. Expandir disco (ver secção "Expansão de Disco" acima)
+# No host Proxmox VE:
+qm resize VMID scsi0 +SIZE
+
+# No PBS:
+apt update && apt install cloud-guest-utils -y
+growpart /dev/sda 3
+pvresize /dev/sda3
+lvextend -l +100%FREE /dev/pbs/root
+resize2fs /dev/pbs/root
+
+# 3. Executar GC para recuperar espaço
+proxmox-backup-manager garbage-collection start pve-store
+
+# 4. Remover backups antigos (prune)
+proxmox-backup-client snapshot prune \
+  vm/102 \
+  --keep-last 3 \
+  --repository root@pam@localhost:pve-store
+
+# 5. Adicionar disco adicional (novo datastore)
+```
 
 ### Problema: Datastore cheio (95%)
 
