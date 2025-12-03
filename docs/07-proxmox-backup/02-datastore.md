@@ -490,7 +490,7 @@ df -h /
 
 **Ação Tomada:**
 ```bash
-# No Proxmox VE
+# No Proxmox VE (expandir disco VM de 50GB para 850GB)
 qm resize 101 scsi0 +400G
 
 # No PBS
@@ -501,7 +501,8 @@ resize2fs /dev/pbs/root
 ```
 
 **Resultado:**
-- Disco: 834 GB
+- Disco VM: 850 GB
+- Filesystem: 834 GB (após overhead do LVM)
 - Utilização: 41 GB (5% usado)
 - Disponível: 762 GB livres
 - Estado: ✅ Resolvido

@@ -294,7 +294,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 **Comandos Executados:**
 
 ```bash
-# No Proxmox VE
+# No Proxmox VE (expandir disco de 50GB para 850GB)
 qm resize 101 scsi0 +400G
 
 # No PBS
@@ -312,9 +312,9 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 **Métricas:**
-- **Antes**: 41 GB capacidade (100% cheio)
-- **Depois**: 834 GB capacidade (5% usado, 762 GB livres)
-- **Expansão**: +784 GB (de 50 GB para 834 GB)
+- **Antes**: Disco 50 GB, filesystem 41 GB (100% cheio)
+- **Depois**: Disco 850 GB, filesystem 834 GB (5% usado, 762 GB livres)
+- **Expansão**: +800 GB (de 50 GB para 850 GB)
 - **Estado**: ✅ Resolvido
 
 ---
