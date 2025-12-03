@@ -98,6 +98,7 @@ sudo nano /etc/krb5.conf
 
 **Conteúdo Completo:**
 
+{% raw %}
 ```ini
 # Kerberos Configuration
 # Realm: FSOCIETY.PT
@@ -163,6 +164,7 @@ sudo nano /etc/krb5.conf
     kdc = FILE:/var/log/kdc.log
     admin_server = FILE:/var/log/kadmind.log
 ```
+{% endraw %}
 
 ### Parâmetros Explicados
 

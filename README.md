@@ -250,6 +250,6 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ---
 
-<sub>🔐 FSociety.pt - Infraestrutura Empresarial Segura | Projeto Universitário em Cibersegurança, Redes e Sistemas Informáticos na ESTG/IPP - 2026/2025</sub>
+<sub>🔐 FSociety.pt - Infraestrutura Empresarial Segura | Projeto Universitário em Cibersegurança, Redes e Sistemas Informáticos na ESTG/IPP - 2024/2025</sub>
 
 </div>

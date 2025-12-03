@@ -100,6 +100,7 @@ sudo nano /etc/freeradius/3.0/mods-available/ldap
 
 **Conteúdo:**
 
+{% raw %}
 ```apache
 # FreeRADIUS LDAP Module Configuration
 # Backend: Samba AD DC (fsociety.pt)
@@ -194,6 +195,7 @@ ldap {
     }
 }
 ```
+{% endraw %}
 
 ---
 
