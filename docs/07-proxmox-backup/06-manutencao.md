@@ -296,7 +296,8 @@ Filesystem      Size  Used Avail Use% Mounted on
 
 ```bash
 # No Proxmox VE
-# Nota: Expansão realizada em etapas até atingir 850GB
+# Nota: Comando mostrado é um exemplo do processo de expansão
+# O disco foi expandido até atingir 850GB total
 qm resize 101 scsi0 +400G
 
 # No PBS
@@ -318,6 +319,8 @@ Filesystem      Size  Used Avail Use% Mounted on
 - **Depois**: Disco 850 GB, filesystem 834 GB (5% usado, 762 GB livres)
 - **Expansão**: +800 GB (de 50 GB para 850 GB)
 - **Estado**: ✅ Resolvido
+
+> **Nota**: O filesystem ext4 reserva ~4% para o root (≈31 GB neste caso), por isso 41G + 762G ≠ 834G exato.
 
 ---
 

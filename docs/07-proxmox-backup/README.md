@@ -327,6 +327,8 @@ https://192.168.1.30:8007/api2/json
 | **Utilizado** | 41 GB | ✅ 5% |
 | **Disponível** | 762 GB | ✅ Excelente |
 
+> **Nota**: ext4 reserva ~4% para root (≈31 GB), por isso a soma não é exata.
+
 **Ações Tomadas:**
 
 1. ✅ **Disco Expandido**
