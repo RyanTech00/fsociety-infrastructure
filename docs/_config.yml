@@ -10,3 +10,6 @@ logo: /assets/images/fsociety-logo. png
 
 # Mostrar link para repo
 show_downloads: false
+
+# Force rebuild
+version: 2
