@@ -206,14 +206,19 @@ fsociety-infrastructure/
 
 ### Guias Principais
 
-1. [🖥️ Instalação do Proxmox VE](docs/02-proxmox/instalacao.md)
-2. [🛡️ Configuração do pfSense](docs/03-pfsense/instalacao.md)
-3. [👥 Implementação do Samba AD](docs/04-active-directory/samba-ad.md)
-4. [📧 Servidor de Email Completo](docs/05-dmz/mailcow.md)
-5. [🔒 Setup do OpenVPN + RADIUS](docs/06-vpn/openvpn-radius.md)
-6. [📁 Nextcloud com LDAP](docs/07-nextcloud/instalacao-ldap.md)
-7. [☁️ Integração Cloudflare](docs/08-cloudflare/waf-cdn-dns.md)
-8. [🛡️ CrowdSec Multi-Server](docs/09-crowdsec/arquitetura.md)
+| Componente | Documentação | Descrição |
+|------------|--------------|-----------|
+| 🛡️ **pfSense** | [docs/03-pfsense/](docs/03-pfsense/) | Firewall, VPN, NAT, 72 regras |
+| 🖥️ **Domain Controller** | [docs/04-domain-controller/](docs/04-domain-controller/) | Samba AD, DNS, DHCP, RADIUS |
+| 📁 **Servidor Ficheiros** | [docs/05-servidor-ficheiros/](docs/05-servidor-ficheiros/) | Nextcloud 32.0, Zammad 6.5 |
+| 🌐 **Webserver** | [docs/06-webserver/](docs/06-webserver/) | Nginx, 6 Reverse Proxies, SSL |
+
+### Destaques Técnicos
+
+- 🔄 **[RADIUS Accounting Daemon](docs/03-pfsense/10-accounting-daemon.md)** - Script para contabilização de sessões VPN (RFC 2866)
+- 🔐 **[Hierarquia VPN por Grupos AD](docs/03-pfsense/06-openvpn.md)** - Pools de IP baseados em grupos do Active Directory
+- 🌍 **[Geo-Access Control](docs/06-webserver/04-proxy-nextcloud.md)** - Controlo de acesso por localização (internos vs externos)
+- 🛡️ **[CrowdSec Multi-Server](docs/04-domain-controller/07-crowdsec.md)** - IDS/IPS distribuído com 57+ cenários
 
 ---
 
