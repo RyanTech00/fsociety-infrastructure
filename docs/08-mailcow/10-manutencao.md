@@ -445,6 +445,62 @@ sudo swapon /swapfile
 
 ---
 
+## 🛠️ Resolução de Problemas
+
+### Emails a Cair no Spam
+
+1. Verificar pontuação em https://www.mail-tester.com
+2. Confirmar SPF inclui smtp2go: `v=spf1 include:spf.smtp2go.com -all`
+3. Verificar DKIM válido: `dig TXT dkim._domainkey.fsociety.pt +short`
+4. Confirmar relayhost está ativo no Mailcow
+
+### Porta 587 Bloqueada
+
+O ISP (Telepac) bloqueia a porta 587. Usar porta alternativa:
+
+```
+[mail-eu.smtp2go.com]:2525
+```
+
+### Utilizadores LDAP Não Aparecem
+
+```bash
+cd /opt/mailcow-ldap-sync
+
+# Ver logs
+sudo docker compose logs ldap-sync
+
+# Forçar sincronização
+sudo docker compose run --rm ldap-sync
+```
+
+### Erro de Autenticação SMTP
+
+Verificar credenciais do relayhost:
+
+```bash
+sudo docker compose exec mysql-mailcow mysql -u mailcow -p mailcow -e "SELECT * FROM relayhosts;"
+```
+
+### Certificado SSL Inválido
+
+```bash
+cd /opt/mailcow-dockerized
+sudo docker compose restart acme-mailcow
+sudo docker compose logs acme-mailcow
+```
+
+### Mail-Tester Score
+
+A configuração atual obteve **10/10** no mail-tester.com, confirmando:
+- ✅ SPF válido
+- ✅ DKIM válido
+- ✅ DMARC configurado
+- ✅ Sem blacklists
+- ✅ Formatação correta
+
+---
+
 ## 📅 Tarefas de Manutenção
 
 ### Diárias

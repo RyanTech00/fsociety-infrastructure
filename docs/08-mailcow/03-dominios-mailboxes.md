@@ -339,6 +339,86 @@ sudo docker compose exec mysql-mailcow \
 
 ---
 
+## 🔗 Integração LDAP com Samba AD-DC
+
+Os utilizadores são sincronizados automaticamente a partir do Samba Active Directory através do `mailcow-ldap-sync`.
+
+### Instalar mailcow-ldap-sync
+
+```bash
+cd /opt
+sudo git clone https://github.com/Programmieansen/mailcow-ldap-sync.git
+cd mailcow-ldap-sync
+sudo cp .env.example .env
+sudo nano .env
+```
+
+### Configuração do .env
+
+```ini
+# Mailcow API
+MAILCOW_API_URL=https://mail.fsociety.pt/api/v1
+MAILCOW_API_KEY=SUA_API_KEY_AQUI
+
+# LDAP / Samba AD-DC
+LDAP_HOST=ldap://192.168.1.10
+LDAP_PORT=389
+LDAP_BIND_DN=CN=Administrator,CN=Users,DC=fsociety,DC=pt
+LDAP_BIND_PASSWORD=PASSWORD_DO_ADMIN
+LDAP_BASE_DN=CN=Users,DC=fsociety,DC=pt
+LDAP_FILTER=(objectClass=user)
+LDAP_MAIL_ATTRIBUTE=mail
+LDAP_NAME_ATTRIBUTE=displayName
+
+# Domínio
+MAIL_DOMAIN=fsociety.pt
+
+# Quota padrão (5GB)
+DEFAULT_QUOTA=5368709120
+```
+
+### Obter API Key do Mailcow
+
+1. Aceder a https://mail.fsociety.pt/admin
+2. Ir a **System → Configuration → Access → API**
+3. Criar nova API Key com permissões de leitura/escrita
+4. Copiar a chave para o ficheiro `.env`
+
+### Executar Sincronização
+
+```bash
+cd /opt/mailcow-ldap-sync
+
+# Iniciar container
+sudo docker compose up -d
+
+# Sincronização manual
+sudo docker compose run --rm ldap-sync
+```
+
+### Sincronização Automática (Cron)
+
+Configurar cron para sincronização a cada 15 minutos:
+
+```bash
+sudo crontab -e
+```
+
+Adicionar:
+
+```cron
+*/15 * * * * cd /opt/mailcow-ldap-sync && docker compose run --rm ldap-sync
+```
+
+### Verificar Logs
+
+```bash
+cd /opt/mailcow-ldap-sync
+sudo docker compose logs ldap-sync
+```
+
+---
+
 ## 🔍 Troubleshooting
 
 ### Mailbox não recebe emails

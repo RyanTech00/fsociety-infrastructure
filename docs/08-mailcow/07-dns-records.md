@@ -159,25 +159,28 @@ SPF define quais servidores podem enviar emails pelo domínio.
 ```
 Type: TXT
 Name: @ (ou fsociety.pt)
-Content: v=spf1 mx ~all
+Content: v=spf1 include:spf.smtp2go.com -all
 TTL: Auto
 ```
+
+> **Nota**: O SPF inclui `spf.smtp2go.com` porque todos os emails são enviados através do relay smtp2go, não diretamente pelo servidor Mailcow.
 
 ### Explicação da Sintaxe
 
 ```
-v=spf1          → Versão SPF 1
-mx              → Servidores listados no MX podem enviar
-~all            → Soft fail para outros (marca como suspeito, não rejeita)
+v=spf1                         → Versão SPF 1
+include:spf.smtp2go.com        → Incluir registos SPF do smtp2go
+-all                           → Hard fail (rejeita tudo que não seja autorizado)
 ```
 
 ### Variações Comuns
 
 ```
-v=spf1 mx ~all                    → Apenas MX (recomendado)
-v=spf1 mx a ~all                  → MX + registo A
-v=spf1 mx ip4:188.81.65.191 ~all  → MX + IP específico
-v=spf1 mx -all                    → Hard fail (rejeita tudo que não seja MX)
+v=spf1 include:spf.smtp2go.com -all   → Com relay smtp2go (recomendado)
+v=spf1 mx ~all                         → Apenas MX
+v=spf1 mx a ~all                       → MX + registo A
+v=spf1 mx ip4:188.81.65.191 ~all       → MX + IP específico
+v=spf1 mx -all                         → Hard fail (rejeita tudo que não seja MX)
 ```
 
 ### Verificar
@@ -192,7 +195,7 @@ dig fsociety.pt TXT +short | grep spf
 
 **Resultado esperado:**
 ```
-"v=spf1 mx ~all"
+"v=spf1 include:spf.smtp2go.com -all"
 ```
 
 ### Testar SPF
@@ -369,7 +372,7 @@ dig -x 188.81.65.191 +short
 
 # 4. SPF
 dig fsociety.pt TXT +short | grep spf
-# Esperado: "v=spf1 mx ~all"
+# Esperado: "v=spf1 include:spf.smtp2go.com -all"
 
 # 5. DKIM
 dig dkim._domainkey.fsociety.pt TXT +short
@@ -417,7 +420,7 @@ dig _dmarc.fsociety.pt TXT +short
 | **A (mail)** | ✅ Configurado | 188.81.65.191 |
 | **MX** | ✅ Configurado | mail.fsociety.pt (10) |
 | **PTR** | ⚠️ A verificar | (solicitar ao ISP) |
-| **SPF** | ✅ Configurado | v=spf1 mx ~all |
+| **SPF** | ✅ Configurado | v=spf1 include:spf.smtp2go.com -all |
 | **DKIM** | ✅ Configurado | dkim._domainkey |
 | **DMARC** | ✅ Configurado | p=quarantine |
 | **Autodiscover** | ✅ Configurado | CNAME → mail |
