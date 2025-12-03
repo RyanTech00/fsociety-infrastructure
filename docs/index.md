@@ -48,8 +48,8 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | Zona | Rede | Nível de Confiança | Servidores |
 |------|------|-------------------|------------|
 | **WAN** | 188.81.65.191 | ❌ Não confiável | Internet Gateway |
-| **LAN** | 192.168.1. 0/24 | ✅ Alta confiança | DC, File Server, PBS |
-| **DMZ** | 10.0.0. 0/24 | ⚠️ Média confiança | Mail, Web, Mail Gateway |
+| **LAN** | 192.168.1.0/24 | ✅ Alta confiança | DC, File Server, PBS |
+| **DMZ** | 10.0.0.0/24 | ⚠️ Média confiança | Mail, Web, Mail Gateway |
 | **VPN** | 10.8.0.0/24 | 🔐 Autenticada | Utilizadores remotos |
 
 ---
@@ -61,7 +61,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | Componente | Tecnologia | Versão |
 |------------|------------|--------|
 | Virtualização | Proxmox VE | 8.x |
-| Firewall | pfSense CE | 2.8. 1 |
+| Firewall | pfSense CE | 2.8.1 |
 | Identidade | Samba AD DC | 4.x |
 | Autenticação | FreeRADIUS | 3.x |
 
@@ -71,7 +71,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 |------------|------------|-------------|
 | Email | Mailcow (Postfix + Dovecot + SOGo) | DMZ |
 | Web Server | Nginx Reverse Proxy | DMZ |
-| Ficheiros | Nextcloud 32. 0.0 | LAN |
+| Ficheiros | Nextcloud 32.0.0 | LAN |
 | Tickets | Zammad 6.5.2 | LAN |
 | Backup | Proxmox Backup Server | LAN |
 | VPN | OpenVPN (2 servidores) | pfSense |
@@ -118,8 +118,8 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | [Samba AD DC](04-domain-controller/02-samba-ad-dc.md) | Provisão do domínio |
 | [DNS Integrado](04-domain-controller/03-dns-integrado.md) | Zonas e registos |
 | [DHCP Server](04-domain-controller/04-dhcp-server.md) | Pool e reservas |
-| [Kerberos](04-domain-controller/05-kerberos. md) | Autenticação de tickets |
-| [FreeRADIUS + LDAP](04-domain-controller/06-freeradius-ldap. md) | RADIUS para VPN |
+| [Kerberos](04-domain-controller/05-kerberos.md) | Autenticação de tickets |
+| [FreeRADIUS + LDAP](04-domain-controller/06-freeradius-ldap.md) | RADIUS para VPN |
 | [CrowdSec](04-domain-controller/07-crowdsec.md) | IDS/IPS |
 | [Shares](04-domain-controller/08-shares-permissoes.md) | Partilhas SMB |
 | [Manutenção](04-domain-controller/09-manutencao.md) | Backup e monitorização |
@@ -134,7 +134,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 |-----------|-----------|
 | [Instalação](05-servidor-ficheiros/01-instalacao.md) | Ubuntu Server 24.04 |
 | [Nextcloud](05-servidor-ficheiros/02-nextcloud.md) | Instalação e config |
-| [Nextcloud LDAP](05-servidor-ficheiros/04-nextcloud-ldap. md) | Integração AD |
+| [Nextcloud LDAP](05-servidor-ficheiros/04-nextcloud-ldap.md) | Integração AD |
 | [Nextcloud Apps](05-servidor-ficheiros/05-nextcloud-apps.md) | 65+ aplicações |
 | [Zammad](05-servidor-ficheiros/06-zammad.md) | Sistema de tickets |
 | [Base de Dados](05-servidor-ficheiros/08-postgresql-redis.md) | PostgreSQL + Redis |
@@ -153,7 +153,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | [Site fsociety.pt](06-webserver/03-site-fsociety.md) | Site institucional |
 | [Proxy Nextcloud](06-webserver/04-proxy-nextcloud.md) | Geo-access control |
 | [Proxy Zammad](06-webserver/05-proxy-zammad.md) | Acesso restrito |
-| [Proxy Mailcow](06-webserver/06-proxy-mailcow. md) | Mail, autoconfig |
+| [Proxy Mailcow](06-webserver/06-proxy-mailcow.md) | Mail, autoconfig |
 | [SSL](06-webserver/07-ssl-letsencrypt.md) | Wildcard Let's Encrypt |
 | [DNS Cloudflare](06-webserver/08-dns-cloudflare.md) | Registos DNS |
 | [CrowdSec](06-webserver/09-crowdsec.md) | 3 bouncers |
@@ -167,7 +167,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | **Regras de Firewall** | 72 |
 | **Aliases pfSense** | 34 |
 | **Cenários CrowdSec** | 57+ |
-| **IPs Blocklist** | ~70. 000 |
+| **IPs Blocklist** | ~70.000 |
 | **Utilizadores AD** | 19 |
 | **Apps Nextcloud** | 65+ |
 | **Documentos Técnicos** | 40+ |
@@ -179,8 +179,9 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | Campo | Informação |
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
+| **Curso** | Cibersegurança, Redes e Sistemas Informáticos |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 | **Domínio** | fsociety.pt |
 
@@ -196,7 +197,7 @@ Este projeto está licenciado sob a [MIT License](../LICENSE).
 
 <img src="assets/images/fsociety-logo.png" alt="FSociety" width="120">
 
-*"Control is an illusion."*
+*"Control is an illusion, and whoever has the illusion has the control."*
 
 **FSociety.pt** - Infraestrutura Empresarial Segura
 
