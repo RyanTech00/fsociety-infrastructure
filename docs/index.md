@@ -93,6 +93,21 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 
 ## 📚 Documentação por Componente
 
+### 🖥️ [Proxmox VE](02-proxmox/README.md)
+
+> Plataforma de virtualização com 7 VMs, storage híbrido (HDD + NVMe) e backups automatizados
+
+| Documento | Descrição |
+|-----------|-----------|
+| [Instalação](02-proxmox/01-instalacao.md) | Setup do Proxmox VE 9.0.3 |
+| [Configuração de Rede](02-proxmox/02-configuracao-rede.md) | Bridges (vmbr0, vmbr1, DMZ) |
+| [Storage](02-proxmox/03-storage.md) | local, local-lvm (HDD), pve-nvme (NVMe) |
+| [Criação de VMs](02-proxmox/04-criacao-vms.md) | 7 VMs configuradas |
+| [Backup](02-proxmox/05-backup-config.md) | Integração com PBS |
+| [Manutenção](02-proxmox/06-manutencao.md) | Updates e monitorização |
+
+---
+
 ### 🛡️ [pfSense Firewall](03-pfsense/README.md)
 
 > Firewall perimetral com 72 regras, 34 aliases, VPN com autenticação RADIUS
@@ -143,6 +158,21 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | [Zammad](05-servidor-ficheiros/06-zammad.md) | Sistema de tickets |
 | [Base de Dados](05-servidor-ficheiros/08-postgresql-redis.md) | PostgreSQL + Redis |
 | [CrowdSec](05-servidor-ficheiros/09-crowdsec.md) | Segurança |
+
+---
+
+### 💾 [Proxmox Backup Server](07-proxmox-backup/README.md)
+
+> PBS 4.0.11 com deduplicação, encriptação e backups automáticos
+
+| Documento | Descrição |
+|-----------|-----------|
+| [Instalação](07-proxmox-backup/01-instalacao.md) | Setup do PBS como VM |
+| [Datastore](07-proxmox-backup/02-datastore.md) | Configuração pve-store |
+| [Integração PVE](07-proxmox-backup/03-integracao-pve.md) | Adicionar PBS ao Proxmox VE |
+| [Backup Jobs](07-proxmox-backup/04-backup-jobs.md) | Agendamento e políticas |
+| [Restore](07-proxmox-backup/05-restore.md) | Restauro de VMs e ficheiros |
+| [Manutenção](07-proxmox-backup/06-manutencao.md) | Prune, GC e verificação |
 
 ---
 
