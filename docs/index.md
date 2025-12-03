@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # 🔐 FSociety. pt - Documentação da Infraestrutura
 
 <div align="center">
