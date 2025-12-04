@@ -168,7 +168,7 @@ sudo docker compose exec clamd-mailcow freshclam --version
 
 **Saída esperada:**
 ```
-ClamAV 1.0.x/xxxx/Mon Dec  2 xx:xx:xx 2024
+ClamAV 1.0.x/xxxx/Mon Dec  2 xx:xx:xx 2025
 ```
 
 ### Ver Versão das Bases de Dados
@@ -460,7 +460,7 @@ whitelist {
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -473,4 +473,4 @@ whitelist {
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*

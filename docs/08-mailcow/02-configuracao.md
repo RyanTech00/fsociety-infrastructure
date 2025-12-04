@@ -402,6 +402,97 @@ sudo docker compose exec mysql-mailcow mysql -u mailcow -p mailcow -e "SELECT * 
 
 ---
 
+## 🔐 Identity Provider LDAP Nativo
+
+O Mailcow possui um **Identity Provider LDAP nativo** que permite autenticação e sincronização automática de utilizadores a partir do Active Directory.
+
+### Configuração via Web UI
+
+1. **Aceder ao painel de administração:**
+   - URL: https://mail.fsociety.pt/admin
+   - Login: `admin`
+
+2. **Navegar para System → Configuration → Identity Provider:**
+   - Selecionar **LDAP** como authsource
+
+3. **Preencher parâmetros LDAP:**
+
+| Campo | Valor |
+|-------|-------|
+| **Host** | 192.168.1.10 |
+| **Port** | 389 |
+| **Base DN** | DC=fsociety,DC=pt |
+| **Bind DN** | CN=svc_ldap,OU=Service Accounts,DC=fsociety,DC=pt |
+| **Bind DN Password** | (password da conta svc_ldap) |
+| **Username Field** | mail |
+| **Filter** | `(&(objectClass=user)(objectCategory=person)(mail=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2))(!(cn=Administrator))(!(cn=Guest))(!(cn=krbtgt))(!(cn=svc_ldap))(!(cn=noreply)))` |
+| **Sync Interval** | 15 minutos |
+| **Import Users** | ✅ Ativo |
+| **Default Template** | Default |
+
+4. **Salvar configuração**
+
+### Comandos de Gestão LDAP
+
+```bash
+cd /opt/mailcow-dockerized
+
+# Forçar sincronização manual
+docker compose exec php-fpm-mailcow php /crons/ldap-sync.php
+
+# Ver logs de sincronização
+docker compose exec redis-mailcow redis-cli -a 'REDIS_PASSWORD' LRANGE CRON_LOG 0 20
+
+# Ver utilizadores LDAP importados
+docker compose exec mysql-mailcow mysql -u mailcow -p mailcow \
+  -e "SELECT username, name, authsource FROM mailbox WHERE authsource='ldap';"
+
+# Ver container responsável pela sincronização
+docker compose ps ofelia-mailcow
+```
+
+### Verificar Configuração LDAP
+
+```bash
+# Ver parâmetros LDAP configurados
+docker compose exec mysql-mailcow mysql -u mailcow -p mailcow \
+  -e "SELECT id, active, auth_source FROM domain;"
+
+# Testar conexão LDAP
+docker compose exec php-fpm-mailcow php -r "
+\$ldap = ldap_connect('192.168.1.10', 389);
+ldap_set_option(\$ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+if (ldap_bind(\$ldap, 'CN=svc_ldap,OU=Service Accounts,DC=fsociety,DC=pt', 'PASSWORD')) {
+    echo 'LDAP connection successful\n';
+} else {
+    echo 'LDAP connection failed\n';
+}
+"
+```
+
+### Filtro LDAP Explicado
+
+O filtro configurado exclui:
+- Contas desativadas (userAccountControl bit 2)
+- Contas de sistema: Administrator, Guest, krbtgt
+- Conta de serviço: svc_ldap
+- Conta de sistema: noreply
+
+E importa apenas:
+- Utilizadores com `objectClass=user` e `objectCategory=person`
+- Utilizadores com atributo `mail` preenchido
+
+### Funcionamento da Sincronização
+
+1. O container `ofelia-mailcow` executa cron jobs
+2. O script `/crons/ldap-sync.php` é executado a cada 15 minutos
+3. O script consulta o AD usando a conta `svc_ldap`
+4. Novos utilizadores são importados com o template "Default"
+5. Mailboxes são criadas automaticamente
+6. Autenticação ocorre em tempo real contra o AD
+
+---
+
 ## 🔄 Aplicar Alterações
 
 ### Restart Completo
@@ -506,7 +597,7 @@ sudo ./generate_config.sh
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -519,4 +610,4 @@ sudo ./generate_config.sh
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*

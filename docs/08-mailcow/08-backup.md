@@ -341,7 +341,7 @@ fi
 #!/bin/bash
 # Script de restore completo
 
-BACKUP_FILE="/backup/mailcow/20241203_020000.tar.gz"
+BACKUP_FILE="/backup/mailcow/20251203_020000.tar.gz"
 RESTORE_DIR="/tmp/mailcow_restore"
 MAILCOW_DIR="/opt/mailcow-dockerized"
 
@@ -389,7 +389,7 @@ echo "Restore concluído!"
 
 ```bash
 # Restaurar apenas uma conta
-BACKUP="/backup/mailcow/20241203/vmail/fsociety.pt/ryan.barbosa"
+BACKUP="/backup/mailcow/20251203/vmail/fsociety.pt/ryan.barbosa"
 MAILBOX="/opt/mailcow-dockerized/data/vmail/fsociety.pt/ryan.barbosa"
 
 # Parar Dovecot
@@ -414,7 +414,7 @@ docker compose exec dovecot-mailcow \
 
 ```bash
 # Restaurar apenas MySQL
-BACKUP_SQL="/backup/mysql_backup_20241203.sql.gz"
+BACKUP_SQL="/backup/mysql_backup_20251203.sql.gz"
 
 cd /opt/mailcow-dockerized
 MYSQL_ROOT_PASS=$(grep DBROOT mailcow.conf | cut -d= -f2)
@@ -482,7 +482,7 @@ Manter documentado:
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -495,4 +495,4 @@ Manter documentado:
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
