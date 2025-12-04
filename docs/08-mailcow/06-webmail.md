@@ -176,8 +176,8 @@ Pesquisar por:
 2. Preencher:
    - **Title:** Reunião de Projeto
    - **Location:** Sala 2
-   - **Start:** 2024-12-10 14:00
-   - **End:** 2024-12-10 16:00
+   - **Start:** 2025-12-10 14:00
+   - **End:** 2025-12-10 16:00
    - **Repeat:** Não
    - **Reminder:** 15 minutos antes
 
@@ -431,7 +431,7 @@ Ver uso de quota:
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -444,4 +444,4 @@ Ver uso de quota:
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
