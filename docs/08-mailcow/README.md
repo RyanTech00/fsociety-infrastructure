@@ -85,6 +85,33 @@ O Mailcow foi escolhido para substituir completamente o Proxmox Mail Gateway (PM
 
 ---
 
+## 🔐 Integração com Active Directory
+
+O Mailcow está integrado com o Active Directory (Samba AD-DC) para autenticação centralizada:
+
+### Configuração LDAP
+
+| Parâmetro | Valor |
+|-----------|-------|
+| **Servidor LDAP** | 192.168.1.10 |
+| **Porta** | 389 |
+| **Base DN** | DC=fsociety,DC=pt |
+| **Bind DN** | CN=svc_ldap,OU=Service Accounts,DC=fsociety,DC=pt |
+| **Authsource** | ldap |
+| **Sincronização** | Automática a cada 15 minutos |
+| **Import Users** | Ativo |
+| **Login Provisioning** | Ativo |
+
+### Filtro LDAP
+
+O filtro exclui contas de sistema e utilizadores desativados:
+- Apenas objectClass=user e objectCategory=person
+- Apenas utilizadores com atributo mail preenchido
+- Exclui contas desativadas (userAccountControl bit 2)
+- Exclui Administrator, Guest, krbtgt, svc_ldap, noreply
+
+---
+
 ## 📦 Containers Docker (18 ativos)
 
 | Container | Imagem | Função | Portas |
@@ -118,28 +145,28 @@ O Mailcow foi escolhido para substituir completamente o Proxmox Mail Gateway (PM
 
 ### Lista de Utilizadores
 
-| Email | Função | Notas |
-|-------|--------|-------|
-| hugo.correia@fsociety.pt | Equipa TI | Administrador |
-| ryan.barbosa@fsociety.pt | Equipa TI | Administrador |
-| igor.araujo@fsociety.pt | Equipa TI | Administrador |
-| tickets@fsociety.pt | Sistema | Integração Zammad |
-| ana.rodrigues@fsociety.pt | Utilizador | - |
-| bruno.ferreira@fsociety.pt | Utilizador | - |
-| carlos.mendes@fsociety.pt | Utilizador | - |
-| claudia.sousa@fsociety.pt | Utilizador | - |
-| daniel.ribeiro@fsociety.pt | Utilizador | - |
-| ines.gomes@fsociety.pt | Utilizador | - |
-| joao.silva@fsociety.pt | Utilizador | - |
-| luis.martins@fsociety.pt | Utilizador | - |
-| maria.santos@fsociety.pt | Utilizador | - |
-| miguel.carvalho@fsociety.pt | Utilizador | - |
-| patricia.lima@fsociety.pt | Utilizador | - |
-| pedro.costa@fsociety.pt | Utilizador | - |
-| ricardo.oliveira@fsociety.pt | Utilizador | - |
-| sara.pinto@fsociety.pt | Utilizador | - |
-| sofia.almeida@fsociety.pt | Utilizador | - |
-| teresa.pereira@fsociety.pt | Utilizador | - |
+| Email | Função | Authsource | Notas |
+|-------|--------|------------|-------|
+| hugo.correia@fsociety.pt | Equipa TI | ldap | Administrador |
+| ryan.barbosa@fsociety.pt | Equipa TI | ldap | Administrador |
+| igor.araujo@fsociety.pt | Equipa TI | ldap | Administrador |
+| tickets@fsociety.pt | Sistema | ldap | Integração Zammad |
+| ana.rodrigues@fsociety.pt | Utilizador | ldap | - |
+| bruno.ferreira@fsociety.pt | Utilizador | ldap | - |
+| carlos.mendes@fsociety.pt | Utilizador | ldap | - |
+| claudia.sousa@fsociety.pt | Utilizador | ldap | - |
+| daniel.ribeiro@fsociety.pt | Utilizador | ldap | - |
+| ines.gomes@fsociety.pt | Utilizador | ldap | - |
+| joao.silva@fsociety.pt | Utilizador | ldap | - |
+| luis.martins@fsociety.pt | Utilizador | ldap | - |
+| maria.santos@fsociety.pt | Utilizador | ldap | - |
+| miguel.carvalho@fsociety.pt | Utilizador | ldap | - |
+| patricia.lima@fsociety.pt | Utilizador | ldap | - |
+| pedro.costa@fsociety.pt | Utilizador | ldap | - |
+| ricardo.oliveira@fsociety.pt | Utilizador | ldap | - |
+| sara.pinto@fsociety.pt | Utilizador | ldap | - |
+| sofia.almeida@fsociety.pt | Utilizador | ldap | - |
+| teresa.pereira@fsociety.pt | Utilizador | ldap | - |
 
 ---
 
@@ -147,7 +174,7 @@ O Mailcow foi escolhido para substituir completamente o Proxmox Mail Gateway (PM
 
 | Camada | Tecnologia | Estado |
 |--------|------------|--------|
-| **SSL/TLS** | Let's Encrypt (auto-renovação) | ✅ Ativo |
+| **SSL/TLS** | Let's Encrypt (válido até Mar 2026) | ✅ Ativo |
 | **Anti-spam** | Rspamd 3.13.2 | ✅ Ativo |
 | **Antivírus** | ClamAV | ✅ Ativo |
 | **IPS/Fail2ban** | Netfilter | ✅ Ativo |
