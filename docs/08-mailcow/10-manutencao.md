@@ -465,13 +465,23 @@ O ISP (Telepac) bloqueia a porta 587. Usar porta alternativa:
 ### Utilizadores LDAP Não Aparecem
 
 ```bash
-cd /opt/mailcow-ldap-sync
+cd /opt/mailcow-dockerized
 
-# Ver logs
-sudo docker compose logs ldap-sync
+# Forçar sincronização LDAP manual
+docker compose exec php-fpm-mailcow php /crons/ldap-sync.php
 
-# Forçar sincronização
-sudo docker compose run --rm ldap-sync
+# Ver logs de sincronização LDAP
+docker compose exec redis-mailcow redis-cli -a 'REDIS_PASSWORD' LRANGE CRON_LOG 0 20
+
+# Verificar utilizadores importados do LDAP
+docker compose exec mysql-mailcow mysql -u mailcow -p mailcow \
+  -e "SELECT username, name, authsource FROM mailbox WHERE authsource='ldap';"
+
+# Verificar se o container ofelia está ativo (responsável pelo cron)
+docker compose ps ofelia-mailcow
+
+# Ver logs do container ofelia
+docker compose logs ofelia-mailcow --tail 50
 ```
 
 ### Erro de Autenticação SMTP

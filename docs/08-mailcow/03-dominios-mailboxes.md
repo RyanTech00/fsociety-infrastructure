@@ -339,83 +339,52 @@ sudo docker compose exec mysql-mailcow \
 
 ---
 
-## 🔗 Integração LDAP com Samba AD-DC
+## 🔗 Integração LDAP Nativa
 
-Os utilizadores são sincronizados automaticamente a partir do Samba Active Directory através do `mailcow-ldap-sync`.
+Os utilizadores são sincronizados automaticamente a partir do Active Directory através do **Identity Provider LDAP nativo** do Mailcow.
 
-### Instalar mailcow-ldap-sync
-
-```bash
-cd /opt
-sudo git clone https://github.com/Programmieansen/mailcow-ldap-sync.git
-cd mailcow-ldap-sync
-sudo cp .env.example .env
-sudo nano .env
-```
-
-### Configuração do .env
-
-```ini
-# Mailcow API
-MAILCOW_API_URL=https://mail.fsociety.pt/api/v1
-MAILCOW_API_KEY=SUA_API_KEY_AQUI
-
-# LDAP / Samba AD-DC
-LDAP_HOST=ldap://192.168.1.10
-LDAP_PORT=389
-LDAP_BIND_DN=CN=Administrator,CN=Users,DC=fsociety,DC=pt
-LDAP_BIND_PASSWORD=PASSWORD_DO_ADMIN
-LDAP_BASE_DN=CN=Users,DC=fsociety,DC=pt
-LDAP_FILTER=(objectClass=user)
-LDAP_MAIL_ATTRIBUTE=mail
-LDAP_NAME_ATTRIBUTE=displayName
-
-# Domínio
-MAIL_DOMAIN=fsociety.pt
-
-# Quota padrão (5GB)
-DEFAULT_QUOTA=5368709120
-```
-
-### Obter API Key do Mailcow
+### Configuração via Web UI
 
 1. Aceder a https://mail.fsociety.pt/admin
-2. Ir a **System → Configuration → Access → API**
-3. Criar nova API Key com permissões de leitura/escrita
-4. Copiar a chave para o ficheiro `.env`
+2. Ir a **System → Configuration → Identity Provider**
+3. Selecionar **LDAP** como authsource
 
-### Executar Sincronização
+### Parâmetros Configurados
 
-```bash
-cd /opt/mailcow-ldap-sync
+| Parâmetro | Valor |
+|-----------|-------|
+| **Host** | 192.168.1.10 |
+| **Port** | 389 |
+| **Base DN** | DC=fsociety,DC=pt |
+| **Bind DN** | CN=svc_ldap,OU=Service Accounts,DC=fsociety,DC=pt |
+| **Username Field** | mail |
+| **Sync Interval** | 15 minutos |
+| **Import Users** | Ativo |
+| **Default Template** | Default |
 
-# Iniciar container
-sudo docker compose up -d
-
-# Sincronização manual
-sudo docker compose run --rm ldap-sync
-```
-
-### Sincronização Automática (Cron)
-
-Configurar cron para sincronização a cada 15 minutos:
+### Verificar Sincronização
 
 ```bash
-sudo crontab -e
+cd /opt/mailcow-dockerized
+
+# Forçar sincronização LDAP
+docker compose exec php-fpm-mailcow php /crons/ldap-sync.php
+
+# Ver logs de sincronização
+docker compose exec redis-mailcow redis-cli -a 'REDIS_PASSWORD' LRANGE CRON_LOG 0 20
+
+# Ver utilizadores com authsource=ldap
+docker compose exec mysql-mailcow mysql -u mailcow -p mailcow \
+  -e "SELECT username, authsource FROM mailbox WHERE authsource='ldap';"
 ```
 
-Adicionar:
+### Funcionamento
 
-```cron
-*/15 * * * * cd /opt/mailcow-ldap-sync && docker compose run --rm ldap-sync
-```
-
-### Verificar Logs
-
-```bash
-cd /opt/mailcow-ldap-sync
-sudo docker compose logs ldap-sync
-```
+1. O container `ofelia-mailcow` executa `ldap-sync.php` periodicamente
+2. O script consulta o AD usando a conta de serviço `svc_ldap`
+3. Utilizadores com atributo `mail` preenchido são importados
+4. Mailboxes são criadas automaticamente com o template "Default"
+5. Autenticação ocorre em tempo real contra o AD
 
 ---
 
