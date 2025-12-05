@@ -354,7 +354,8 @@ Os utilizadores são sincronizados automaticamente a partir do Active Directory 
 | Parâmetro | Valor |
 |-----------|-------|
 | **Host** | 192.168.1.10 |
-| **Port** | 389 |
+| **Port** | 636 |
+| **Encryption** | SSL/TLS (LDAPS) |
 | **Base DN** | DC=fsociety,DC=pt |
 | **Bind DN** | CN=svc_ldap,OU=Service Accounts,DC=fsociety,DC=pt |
 | **Username Field** | mail |

@@ -420,7 +420,8 @@ O Mailcow possui um **Identity Provider LDAP nativo** que permite autenticação
 | Campo | Valor |
 |-------|-------|
 | **Host** | 192.168.1.10 |
-| **Port** | 389 |
+| **Port** | 636 |
+| **Encryption** | SSL/TLS (LDAPS) |
 | **Base DN** | DC=fsociety,DC=pt |
 | **Bind DN** | CN=svc_ldap,OU=Service Accounts,DC=fsociety,DC=pt |
 | **Bind DN Password** | (password da conta svc_ldap) |
@@ -460,8 +461,9 @@ docker compose exec mysql-mailcow mysql -u mailcow -p mailcow \
 
 # Testar conexão LDAP
 docker compose exec php-fpm-mailcow php -r "
-\$ldap = ldap_connect('192.168.1.10', 389);
+\$ldap = ldap_connect('ldaps://192.168.1.10:636');
 ldap_set_option(\$ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+ldap_set_option(\$ldap, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_NEVER);
 if (ldap_bind(\$ldap, 'CN=svc_ldap,OU=Service Accounts,DC=fsociety,DC=pt', 'PASSWORD')) {
     echo 'LDAP connection successful\n';
 } else {

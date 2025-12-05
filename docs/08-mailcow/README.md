@@ -94,7 +94,8 @@ O Mailcow está integrado com o Active Directory (Samba AD-DC) para autenticaç�
 | Parâmetro | Valor |
 |-----------|-------|
 | **Servidor LDAP** | 192.168.1.10 |
-| **Porta** | 389 |
+| **Porta** | 636 (LDAPS) |
+| **Encriptação** | SSL/TLS |
 | **Base DN** | DC=fsociety,DC=pt |
 | **Bind DN** | CN=svc_ldap,OU=Service Accounts,DC=fsociety,DC=pt |
 | **Authsource** | ldap |
