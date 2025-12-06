@@ -9,7 +9,7 @@
 # 🔐 FSociety.pt
 
 ### Infraestrutura Empresarial Segura | Four-Legged Firewall Architecture
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17840636.svg)](https://doi.org/10.5281/zenodo.17840636)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ryantech00.github.io/fsociety-infrastructure/)
 [![pfSense](https://img.shields.io/badge/Firewall-pfSense-orange)](https://www.pfsense.org/)
@@ -349,6 +349,28 @@ fsociety-infrastructure/
 | **Autores** | Ryan Barbosa (@RyanTech00), Hugo Correia (@hugocorreia2004), Igor Araújo (@FK3570) |
 | **Domínio** | fsociety.pt |
 
+---
+
+## 📚 Citação
+
+Se utilizar este projeto ou a documentação como referência académica, por favor cite:
+
+> Barbosa, R., Correia, H., & Araújo, I. (2025). FSociety Infrastructure: Enterprise Network with Four-Legged Firewall (v1.1.0). Zenodo. https://doi.org/10.5281/zenodo.17840636
+
+**BibTeX:**
+
+```bibtex
+@software{fsociety_infra_2025,
+  author       = {Barbosa, Ryan and Correia, Hugo and Araújo, Igor},
+  title        = {FSociety Infrastructure: Enterprise Network with Four-Legged Firewall},
+  month        = dec,
+  year         = 2025,
+  publisher    = {Zenodo},
+  version      = {v1.1.0},
+  doi          = {10.5281/zenodo.17840636},
+  url          = {https://doi.org/10.5281/zenodo.17840636}
+}
+```
 ---
 
 ## 📄 Licença
