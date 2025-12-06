@@ -341,8 +341,7 @@ O CrowdSec funciona através de uma arquitetura distribuída com múltiplos comp
 
 **Exemplo de ataque bloqueado**:
 ```
-GET /catalog-portal/ui/oauth/verify?error=&deviceUdid=$
-{%23_memberAccess[%23_memberAccess...}
+GET /catalog-portal/ui/oauth/verify?error=&deviceUdid=$ {% raw %} {%23_memberAccess[%23_memberAccess...} {% endraw %}
 ```
 
 ---
