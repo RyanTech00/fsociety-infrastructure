@@ -3,10 +3,15 @@ description: Infraestrutura Empresarial Segura | Four-Legged Firewall
 remote_theme: pages-themes/hacker@v0.2.0
 plugins:
   - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-relative-links
+  - jekyll-paginate
 
 # Metadados
 author: Ryan Barbosa, Hugo Correia, Igor Araújo
 logo: /assets/images/fsociety-logo.png
+
+github: [metadata]
 
 # Mostrar link para repo
 show_downloads: false
