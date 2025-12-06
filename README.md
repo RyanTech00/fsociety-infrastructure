@@ -346,7 +346,7 @@ fsociety-infrastructure/
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
 | **Ano Letivo** | 2025/2026 |
-| **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
+| **Autores** | Ryan Barbosa (@RyanTech00), Hugo Correia (@hugocorreia2004), Igor Araújo (@FK3570) |
 | **Domínio** | fsociety.pt |
 
 ---
