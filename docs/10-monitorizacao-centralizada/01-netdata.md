@@ -132,7 +132,7 @@ curl http://localhost:19999/api/v1/info
 
 ### Visão Geral
 
-![Netdata Dashboard](../../images/netdata-all-nodes.png)
+![Netdata Dashboard](images/netdata-all-nodes.png)
 
 O dashboard centralizado apresenta:
 
@@ -199,7 +199,7 @@ Status: Operacional
 
 ### Alertas por Email
 
-![Netdata Alert Email](../../images/netdata-alert-email.png)
+![Netdata Alert Email](images/netdata-alert-email.png)
 
 #### Anatomia de um Alerta
 
@@ -234,7 +234,7 @@ Durante a implementação, foi recebido um alerta automático:
 
 ### Aplicação Mobile
 
-![Netdata Mobile App](../../images/netdata-mobile-alerts1.png)
+![Netdata Mobile App](images/netdata-mobile-alerts1.png)
 
 #### Funcionalidades
 
@@ -258,7 +258,7 @@ Durante a implementação, foi recebido um alerta automático:
 
 ### AI Insights Dashboard
 
-![AI Insights](../..images/netdata-ai-insights.png)
+![AI Insights](images/netdata-ai-insights.png)
 
 O módulo de IA representa uma evolução de **monitorização reativa** para **observabilidade proativa**.
 
@@ -445,7 +445,7 @@ Docker Containers: (9 individualizados)
   [... 7 more containers]
 ```
 
-![App Metrics](../../images/netdata-apps-metrics.png)
+![App Metrics](images/netdata-apps-metrics.png)
 
 ### Benefício da Granularidade
 
