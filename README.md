@@ -2,7 +2,7 @@
 
 <div align="center">
   
-![FSociety Infrastructure](docs/assets/images/fsociety-infrastructure.png)
+![FSociety Infrastructure](docs/assets/images/fsociety-logo.png)
 
 </div>
 
@@ -60,7 +60,7 @@ A implementação seguiu **cinco princípios fundamentais**:
 
 <div align="center">
 
-![FSociety Network Architecture](docs/assets/images/02-Fsociety-Network.png)
+![FSociety Network Architecture](docs/assets/images/arquitetura-rede-fsociety.png)
 
 *Arquitetura Four-Legged Firewall com segmentação WAN/LAN/DMZ/VPN e proteção Cloudflare*
 
@@ -359,7 +359,7 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 <div align="center">
 
-<img src="docs/assets/images/fsociety-logo.png" alt="FSociety Logo" width="150">
+<img src="docs/assets/images/fsociety-infrastructure.png" alt="FSociety Logo" width="150">
 
 *"Control is an illusion, and whoever has the illusion has the control."*
 
