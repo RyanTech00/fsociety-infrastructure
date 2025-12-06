@@ -6,7 +6,7 @@ plugins:
 
 # Metadados
 author: Ryan Barbosa, Hugo Correia, Igor Araújo
-logo: /assets/images/fsociety-logo. png
+logo: /assets/images/fsociety-logo.png
 
 # Mostrar link para repo
 show_downloads: false
