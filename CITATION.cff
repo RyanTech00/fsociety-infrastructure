@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this infrastructure documentation, please cite it as below."
+type: software
+title: "FSociety Infrastructure: Enterprise Network Documentation"
+authors:
+  - family-names: Barbosa
+    given-names: Ryan
+  - family-names: Correia
+    given-names: Hugo
+  - family-names: Araújo
+    given-names: Igor
+repository-code: "https://github.com/RyanTech00/fsociety-infrastructure"
+url: "https://doi.org/10.5281/zenodo.17840636"
+doi: 10.5281/zenodo.17840636
+date-released: 2025-12-07
+keywords:
+  - network-segmentation
+  - pfsense
+  - samba-ad
+  - zero-trust
+  - enterprise-infrastructure
+license: CC-BY-4.0
+version: 1.0.0
+
