@@ -11,7 +11,7 @@
 | VMs | Nome | Schedule | Storage | Modo | Compressão |
 |-----|------|----------|---------|------|------------|
 | 102 | pfSense | 02:00 diário | pbs-store | snapshot | zstd |
-| 104, 105, 106 | Web-Server, DC, Files | 02:30 diário | pbs-store | snapshot | zstd |
+| 104, 105, 106, 108 | Web-Server, DC, Files | 02:30 diário | pbs-store | snapshot | zstd |
 
 ### Job 1: pfSense (VMID 102)
 
@@ -45,6 +45,7 @@
 | 104 | Web-Server | 2025-12-01 | 4 |
 | 105 | Servidor-de-dominio | 2025-11-06 | 3 |
 | 106 | Servidor-de-Ficheiros | 2025-11-06 | 3 |
+| 108 | mailcow | (pendente) | 0 |
 
 ---
 
