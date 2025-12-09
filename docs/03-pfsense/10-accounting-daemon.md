@@ -4,6 +4,14 @@
 
 ---
 
+## 📹 Demonstração
+
+O vídeo abaixo demonstra o funcionamento do daemon de accounting, incluindo o registo de sessões VPN com eventos Acct-Start, Acct-Interim-Update e Acct-Stop:
+
+https://github.com/user-attachments/assets/c844de2d-257c-4373-858f-36b11bbaf624
+
+---
+
 ## 📋 Visão Geral
 
 ### O que é RADIUS Accounting?
