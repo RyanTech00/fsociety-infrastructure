@@ -4,6 +4,14 @@
 
 ---
 
+## 📹 Demonstração Completa
+
+O vídeo abaixo demonstra a navegação pelas **72 regras** distribuídas pelas interfaces WAN, LAN, DMZ e OpenVPN:
+
+https://github.com/user-attachments/assets/9809a299-b4ac-408f-a518-2019d445b742
+
+---
+
 ## 📋 Filosofia de Segurança
 
 ### Princípios Aplicados
@@ -15,7 +23,6 @@
 - **Logging**: Registo de tráfego negado para auditoria
 
 ### Ordem de Processamento
-
 ```
 ┌──────────────────────────────────────────────────────┐
 │  1. Regras da Interface (top-to-bottom)              │
@@ -33,7 +40,6 @@
 ---
 
 ## 🌐 Regras WAN (Interface Externa)
-
 ```
 Firewall → Rules → WAN
 ```
@@ -47,112 +53,27 @@ Firewall → Rules → WAN
 
 ### Lista de Regras
 
-| # | Ação | Proto | Origem | Porta Origem | Destino | Porta Destino | Descrição |
-|---|------|-------|--------|--------------|---------|---------------|-----------|
-| 1 | ✅ Pass | TCP | 192.168.31.34 | * | WAN address | 8007 | Proxmox → PBS UI |
-| 2 | ✅ Pass | TCP | * | * | MAIL_IP | 25 | SMTP → Mailcow |
-| 3 | ✅ Pass | TCP | * | * | MAIL_IP | 110 | POP3 → Mailcow |
-| 4 | ✅ Pass | TCP | * | * | MAIL_IP | 143 | IMAP → Mailcow |
-| 5 | ✅ Pass | TCP | * | * | MAIL_IP | 465 | SMTPS → Mailcow |
-| 6 | ✅ Pass | TCP | * | * | MAIL_IP | 587 | Submission → Mailcow |
-| 7 | ✅ Pass | TCP | * | * | MAIL_IP | 993 | IMAPS → Mailcow |
-| 8 | ✅ Pass | TCP | * | * | MAIL_IP | 995 | POP3S → Mailcow |
-| 9 | ✅ Pass | TCP | * | * | MAIL_IP | 4190 | Sieve → Mailcow |
-| 10 | ✅ Pass | TCP | * | * | WEB_IP | 80 | HTTP → Webserver |
-| 11 | ✅ Pass | TCP | * | * | WEB_IP | 443 | HTTPS → Webserver |
-| 12 | ✅ Pass | UDP | * | * | WAN address | 1194 | OpenVPN Local |
-| 13 | ✅ Pass | UDP | * | * | WAN address | 1195 | OpenVPN RADIUS |
-| - | ❌ Block | * | * | * | * | * | Default Deny (implícito) |
-
-### Configuração Detalhada
-
-#### Regra 1: Proxmox → PBS
-
-```
-Action: Pass
-Interface: WAN
-Address Family: IPv4
-Protocol: TCP
-
-Source:
-- Type: Single host or alias
-- Address: 192.168.31.34 (PROXMOX_HOST)
-
-Destination:
-- Type: WAN address
-- Port: 8007 (PBS UI)
-
-Extra Options:
-- Log: ✅ Log packets that are handled by this rule
-- Description: Proxmox VE → PBS Management UI
-```
-
-#### Regra 2-9: Mailcow Services
-
-```
-Action: Pass
-Interface: WAN
-Address Family: IPv4
-Protocol: TCP
-
-Source:
-- Type: any
-
-Destination:
-- Type: Single host or alias
-- Address: MAIL_IP (10.0.0.20)
-- Port: [25|110|143|465|587|993|995|4190]
-
-Extra Options:
-- Log: ❌ (muito tráfego)
-- Description: Public Mail - [SMTP|POP3|IMAP|SMTPS|Submission|IMAPS|POP3S|Sieve]
-```
-
-#### Regra 10-11: Web Services
-
-```
-Action: Pass
-Interface: WAN
-Address Family: IPv4
-Protocol: TCP
-
-Source:
-- Type: any
-
-Destination:
-- Type: Single host or alias
-- Address: WEB_IP (10.0.0.30)
-- Port: [80|443]
-
-Extra Options:
-- Log: ❌
-- Description: Public Web - [HTTP|HTTPS]
-```
-
-#### Regra 12-13: OpenVPN
-
-```
-Action: Pass
-Interface: WAN
-Address Family: IPv4
-Protocol: UDP
-
-Source:
-- Type: any
-
-Destination:
-- Type: WAN address
-- Port: [1194|1195]
-
-Extra Options:
-- Log: ✅ Log packets (útil para troubleshooting)
-- Description: OpenVPN Server - [Local Auth|RADIUS Auth]
-```
+| # | States | Ação | Proto | Origem | Porta | Destino | Porta | Gateway | Descrição |
+|---|--------|------|-------|--------|-------|---------|-------|---------|-----------|
+| 1 | 18/19.59 MiB | ✅ Pass | IPv4 TCP | 192.168.31.34 | * | 192.168.1.30 | 8007 | none | WAN: Proxmox VE → PBS |
+| | | | **SERVIÇOS PÚBLICOS: EMAIL (PMG + MAIL SERVER)** | | | | | | |
+| 2 | 0/0 B | ✅ Pass | IPv4 TCP | * | * | 10.0.0.20 | 25 (SMTP) | none | WAN: SMTP → MAILCOW |
+| 3 | | ✅ Pass | IPv4 TCP | * | * | 10.0.0.20 | 587 (SUBMISSION) | none | WAN: Submission → Mail |
+| 4 | | ✅ Pass | IPv4 TCP | * | * | 10.0.0.20 | 465 (SMTP/S) | none | WAN: SMTPS → Mail |
+| 5 | | ✅ Pass | IPv4 TCP | * | * | 10.0.0.20 | 143 (IMAP) | none | WAN: IMAP → Mail |
+| 6 | | ✅ Pass | IPv4 TCP | * | * | 10.0.0.20 | 993 (IMAP/S) | none | WAN: IMAPS → Mail |
+| | | | **SERVIÇOS PÚBLICOS: WEB** | | | | | | |
+| 7 | | ✅ Pass | IPv4 TCP | * | * | 10.0.0.30 | 80 (HTTP) | none | WAN: HTTP → Webserver |
+| 8 | | ✅ Pass | IPv4 TCP | * | * | 10.0.0.30 | 443 (HTTPS) | none | WAN: HTTPS → Webserver |
+| | | | **ACESSO REMOTO (VPN)** | | | | | | |
+| 9 | 0/0 B | ✅ Pass | IPv4 UDP | * | * | WAN address | 1194 (OpenVPN) | none | WAN: OpenVPN (BACKUP) |
+| 10 | 2/45.29 MiB | ✅ Pass | IPv4 UDP | * | * | WAN address | 1195 | none | WAN: OpenVPN |
+| | | | **SEGURANÇA** | | | | | | |
+| 11 | | ❌ Block | IPv4 TCP | * | * | * | * | none | WAN: Default Deny All |
 
 ---
 
 ## 🏠 Regras LAN (Rede Interna)
-
 ```
 Firewall → Rules → LAN
 ```
@@ -166,165 +87,49 @@ Firewall → Rules → LAN
 
 ### Lista de Regras
 
-| # | Ação | Proto | Origem | Porta Origem | Destino | Porta Destino | Descrição |
-|---|------|-------|--------|--------------|---------|---------------|-----------|
-| 1 | ✅ Pass | TCP | LAN net | * | LAN address | 8009, 80, 22 | Anti-Lockout Rule |
-| 2 | ✅ Pass | TCP/UDP | LAN net | * | * | 53 | DNS |
-| 3 | ✅ Pass | TCP | LAN net | * | * | 80, 443 | HTTP/HTTPS Internet |
-| 4 | ✅ Pass | UDP | LAN net | * | * | 123 | NTP |
-| 5 | ✅ Pass | ICMP | LAN net | * | * | * | ICMP (ping) |
-| 6 | ✅ Pass | TCP/UDP | LAN net | * | DC_IP | AD_PORTS | LAN → DC (AD/LDAP) |
-| 7 | ✅ Pass | TCP | LAN net | * | DC_IP | SMB_PORTS | LAN → DC (SMB) |
-| 8 | ✅ Pass | TCP | LAN net | * | DC_IP | RPC_PORTS | LAN → DC (RPC) |
-| 9 | ✅ Pass | TCP/UDP | LAN net | * | DC_IP | 53 | LAN → DC (DNS) |
-| 10 | ✅ Pass | UDP | LAN net | * | DC_IP | 67, 68 | LAN → DC (DHCP) |
-| 11 | ✅ Pass | TCP | LAN net | * | FILESERVER_IP | 80, 443 | LAN → Nextcloud |
-| 12 | ✅ Pass | TCP | LAN net | * | FILESERVER_IP | 22 | LAN → Files (SSH) |
-| 13 | ✅ Pass | TCP | LAN net | * | PBS_IP | 8007 | LAN → PBS UI |
-| 14 | ✅ Pass | TCP | LAN net | * | PBS_IP | 22 | LAN → PBS (SSH) |
-| 15 | ✅ Pass | TCP | LAN net | * | LAN address | 443 | LAN → pfSense WebUI |
-| 16 | ✅ Pass | TCP | LAN net | * | WEB_IP | 80, 443 | LAN → DMZ Web |
-| 17 | ✅ Pass | TCP | FILESERVER_IP | * | MAIL_IP | 80, 443 | Nextcloud → Mailcow |
-| 18 | ❌ Reject | * | LAN net | * | DMZ_NET | * | Block LAN → DMZ (rest) |
-
-### Configuração Detalhada
-
-#### Regra 1: Anti-Lockout
-
-```
-Action: Pass
-Interface: LAN
-Protocol: TCP
-
-Source: LAN net
-
-Destination:
-- Type: LAN address
-- Port Range: 8009, 80, 22
-
-Description: Anti-Lockout Rule - Management Access
-```
-
-#### Regra 2-5: Internet Access
-
-```
-# DNS
-Action: Pass | Protocol: TCP/UDP
-Source: LAN net | Destination: any | Port: 53
-
-# HTTP/HTTPS
-Action: Pass | Protocol: TCP
-Source: LAN net | Destination: any | Port: 80, 443
-
-# NTP
-Action: Pass | Protocol: UDP
-Source: LAN net | Destination: any | Port: 123
-
-# ICMP
-Action: Pass | Protocol: ICMP
-Source: LAN net | Destination: any
-```
-
-#### Regra 6-10: LAN → Domain Controller
-
-```
-# Active Directory Ports
-Action: Pass
-Protocol: TCP/UDP
-Source: LAN net
-Destination: DC_IP (192.168.1.10)
-Port: AD_PORTS (88, 389, 464, 636, 3268, 3269)
-Description: LAN → DC - Active Directory Services
-
-# SMB
-Port: SMB_PORTS (139, 445)
-Description: LAN → DC - File Sharing
-
-# RPC
-Port: RPC_PORTS (135, 49152-49154)
-Description: LAN → DC - Remote Procedure Call
-
-# DNS
-Port: 53
-Description: LAN → DC - DNS Queries
-
-# DHCP
-Protocol: UDP
-Port: 67, 68
-Description: LAN → DC - DHCP Requests
-```
-
-#### Regra 11-14: LAN → Internal Services
-
-```
-# Nextcloud
-Action: Pass | Protocol: TCP
-Source: LAN net
-Destination: FILESERVER_IP (192.168.1.40)
-Port: 80, 443
-Description: LAN → Nextcloud Web Interface
-
-# SSH to Files
-Port: 22
-Description: LAN → Files Server (SSH Management)
-
-# PBS
-Destination: PBS_IP (192.168.1.30)
-Port: 8007
-Description: LAN → Proxmox Backup Server UI
-
-# SSH to PBS
-Port: 22
-Description: LAN → PBS (SSH Management)
-```
-
-#### Regra 15: LAN → pfSense
-
-```
-Action: Pass
-Protocol: TCP
-Source: LAN net
-Destination: LAN address (192.168.1.1)
-Port: 443
-Description: LAN → pfSense WebUI
-```
-
-#### Regra 16-17: LAN → DMZ (Selective)
-
-```
-# Web Server
-Action: Pass | Protocol: TCP
-Source: LAN net
-Destination: WEB_IP (10.0.0.30)
-Port: 80, 443
-Description: LAN → DMZ Webserver
-
-# Nextcloud → Mailcow (for integrations)
-Action: Pass | Protocol: TCP
-Source: FILESERVER_IP (192.168.1.40)
-Destination: MAIL_IP (10.0.0.20)
-Port: 80, 443
-Description: Nextcloud → Mailcow Integration
-```
-
-#### Regra 18: Block LAN → DMZ (Rest)
-
-```
-Action: Reject
-Protocol: Any
-Source: LAN net
-Destination: DMZ_NET (10.0.0.0/24)
-Port: Any
-
-Extra Options:
-- Log: ✅ Log packets
-- Description: Block LAN → DMZ - Default Deny Remaining Traffic
-```
+| # | States | Ação | Proto | Origem | Porta | Destino | Porta | Gateway | Descrição |
+|---|--------|------|-------|--------|-------|---------|-------|---------|-----------|
+| 1 | 3/1 B | ✅ Pass | * | * | * | LAN Address | 8009, 80, 22 | | Anti-Lockout Rule |
+| 2 | 0/0 B | ✅ Pass | IPv4 TCP | 192.168.1.0 /24 | * | DMZ_SERVERS | * | none | |
+| | | | **ACESSO INTERNET** | | | | | | |
+| 3 | 1/455 KiB | ✅ Pass | IPv4 TCP/UDP | LAN address | * | * | 53 (DNS) | none | LAN → Internet: DNS |
+| 4 | | ✅ Pass | IPv4 TCP | LAN address | * | * | 80 (HTTP) | none | LAN → Internet: HTTP |
+| 5 | | ✅ Pass | IPv4 TCP | LAN address | * | * | 443 (HTTPS) | none | LAN → Internet: HTTPS |
+| 6 | | ✅ Pass | IPv4 UDP | LAN address | * | * | 123 (NTP) | none | LAN → Internet: NTP |
+| 7 | | ✅ Pass | IPv4 ICMP | LAN address | * | * | * | none | LAN → Internet: ICMP |
+| | | | **SERVIÇOS DC (DOMAIN CONTROLLER - 192.168.1.10)** | | | | | | |
+| 8 | 5/0 B | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.10 | 1812 | none | RADIUS Auth + Accounting para DC Fsociety |
+| 9 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.10 | 389 (LDAP) | none | LAN → DC: LDAP |
+| 10 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.10 | 636 (LDAP/S) | none | LAN → DC: LDAPS |
+| 11 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.10 | 88 | none | LAN → DC: Kerberos |
+| 12 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.10 | 445 (MS DS) | none | LAN → DC: MS DS |
+| 13 | 0/0 B | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.10 | 49152-65535 | none | LAN → DC: RPC Dinâmico |
+| 14 | 0/0 B | ✅ Pass | IPv4 TCP/UDP | LAN address | * | 192.168.1.10 | 53 (DNS) | none | LAN → DC: DNS |
+| 15 | 1/1 B | ✅ Pass | IPv4 TCP/UDP | LAN address | * | 192.168.1.10 | 464 | none | LAN → DC: KDC |
+| 16 | | ✅ Pass | IPv4 UDP | LAN address | * | 192.168.1.10 | 123 (NTP) | none | LAN → DC: NTP |
+| 17 | | ✅ Pass | IPv4 UDP | LAN address | * | 192.168.1.10 | 67 | none | LAN → DC: DHCP |
+| 18 | | ✅ Pass | IPv4 UDP | LAN address | * | 192.168.1.10 | 3268 | none | LAN → DC: GC |
+| | | | **SERVIÇOS INTERNOS** | | | | | | |
+| 19 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.40 | 443 (HTTPS) | none | LAN → Files: Nextcloud |
+| 20 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.40 | 8080 | none | LAN → Files: Zammad |
+| 21 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.40 | 22 (SSH) | none | LAN → Files: SSH |
+| 22 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.30 | 8007 | none | LAN → PBS: UI |
+| 23 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.30 | 22 (SSH) | none | LAN → PBS: SSH |
+| 24 | | ✅ Pass | IPv4 TCP | LAN address | * | 192.168.1.1 | 443 (HTTPS) | none | LAN → pfSense |
+| | | | **ACESSO À DMZ** | | | | | | |
+| 25 | | ✅ Pass | IPv4 TCP | 192.168.1.10 | * | 10.0.0.30 | 85 (HTTP) | none | LAN → DMZ: Web Relay |
+| 26 | | ✅ Pass | IPv4 TCP | LAN address | * | 10.0.0.30 | 443 (HTTPS) | none | LAN → DMZ: Web HTTPS |
+| | | | **NEXTCLOUD - MAIL SERVER (INTEGRAÇÃO)** | | | | | | |
+| 27 | | ✅ Pass | IPv4 TCP | 192.168.1.40 | * | 10.0.0.20 | 143 (IMAP) | none | LAN → DMZ: Nextcloud → Mail (IMAPS) |
+| 28 | | ✅ Pass | IPv4 TCP | 192.168.1.40 | * | 10.0.0.20 | 993 (IMAP/S) | none | LAN → DMZ: Nextcloud → Mail (IMAPS) |
+| 29 | | ✅ Pass | IPv4 TCP | 192.168.1.40 | * | 10.0.0.20 | 587 | none | |
+| 30 | | ✅ Pass | IPv4 TCP | 192.168.1.40 | * | 10.0.0.20 | 465 (SMTP/S) | none | |
+| | | | **SEGURANÇA** | | | | | | |
+| 31 | 1/1 B | ❌ Reject | IPv4 TCP | LAN address | * | 10.0.0.0/24 | * | none | LAN → DMZ: Block rest |
 
 ---
 
 ## 🔒 Regras DMZ (Zona Desmilitarizada)
-
 ```
 Firewall → Rules → DMZ
 ```
@@ -339,170 +144,42 @@ Firewall → Rules → DMZ
 
 ### Lista de Regras
 
-| # | Ação | Proto | Origem | Porta Origem | Destino | Porta Destino | Descrição |
-|---|------|-------|--------|--------------|---------|---------------|-----------|
-| 1 | ✅ Pass | TCP | DMZ net | * | !LAN_NET | 443 | Force HTTPS through proxy |
-| 2 | ✅ Pass | ICMP | DMZ net | * | * | * | DMZ → Internet (ICMP) |
-| 3 | ✅ Pass | TCP | DMZ net | * | !LAN_NET | 25 | DMZ → Internet (SMTP) |
-| 4 | ✅ Pass | TCP/UDP | DMZ net | * | !LAN_NET | 53 | DMZ → Internet (DNS) |
-| 5 | ✅ Pass | TCP | DMZ net | * | !LAN_NET | 80, 443 | DMZ → Internet (HTTP/HTTPS) |
-| 6 | ✅ Pass | UDP | DMZ net | * | !LAN_NET | 123 | DMZ → Internet (NTP) |
-| 7 | ✅ Pass | TCP | DMZ net | * | WAZUH_IP | 1514, 1515 | DMZ → Wazuh Manager |
-| 8 | ✅ Pass | TCP/UDP | DMZ net | * | DC_IP | 389, 636 | DMZ → DC (LDAP/LDAPS) |
-| 9 | ✅ Pass | TCP/UDP | DMZ net | * | DC_IP | 88 | DMZ → DC (Kerberos) |
-| 10 | ✅ Pass | TCP | DMZ net | * | DC_IP | 445 | DMZ → DC (MS-DS) |
-| 11 | ✅ Pass | TCP | DMZ net | * | DC_IP | RPC_PORTS | DMZ → DC (RPC) |
-| 12 | ✅ Pass | TCP/UDP | DMZ net | * | DC_IP | 53 | DMZ → DC (DNS) |
-| 13 | ✅ Pass | TCP/UDP | DMZ net | * | DC_IP | 464 | DMZ → DC (KDC) |
-| 14 | ✅ Pass | UDP | DMZ net | * | DC_IP | 123 | DMZ → DC (NTP) |
-| 15 | ✅ Pass | ICMP | DMZ net | * | DC_IP | * | DMZ → DC (PING) |
-| 16 | ✅ Pass | TCP | MAIL_IP | * | FILESERVER_IP | 80, 443 | Mail → Nextcloud |
-| 17 | ✅ Pass | TCP | FILESERVER_IP | * | MAIL_IP | 80, 443 | Nextcloud → Mail |
-| 18 | ✅ Pass | TCP | FILESERVER_IP | * | DC_IP | 389, 636 | Files → DC (LDAP) |
-| 19 | ✅ Pass | TCP | WEB_IP | * | MAIL_IP | 993 | Web → Mail (IMAPS Z-Push) |
-| 20 | ✅ Pass | TCP | WEB_IP | * | MAIL_IP | 25, 587 | Web → Mail (SMTP) |
-| 21 | ❌ Reject | * | DMZ net | * | DMZ_SERVERS | * | Block DMZ Inter-Server |
-| 22 | ❌ Reject | * | DMZ net | * | LAN_NET | * | Block DMZ → LAN |
-
-### Configuração Detalhada
-
-#### Regra 1: Force HTTPS Proxy
-
-```
-Action: Pass
-Protocol: TCP
-Source: DMZ net
-Destination: Invert match - LAN_NET
-Port: 443
-
-Description: Force DMZ HTTPS through proxy/inspection
-```
-
-#### Regra 2-6: DMZ → Internet (Limited)
-
-```
-# ICMP
-Action: Pass | Protocol: ICMP
-Source: DMZ net | Destination: !LAN_NET
-
-# SMTP (sending mail)
-Action: Pass | Protocol: TCP
-Source: DMZ net | Destination: !LAN_NET | Port: 25
-
-# DNS
-Action: Pass | Protocol: TCP/UDP
-Source: DMZ net | Destination: !LAN_NET | Port: 53
-
-# HTTP/HTTPS (updates, packages)
-Action: Pass | Protocol: TCP
-Source: DMZ net | Destination: !LAN_NET | Port: 80, 443
-
-# NTP (time sync)
-Action: Pass | Protocol: UDP
-Source: DMZ net | Destination: !LAN_NET | Port: 123
-```
-
-#### Regra 7: DMZ → Wazuh
-
-```
-Action: Pass
-Protocol: TCP
-Source: DMZ net
-Destination: WAZUH_IP (192.168.1.50)
-Port: 1514, 1515
-
-Description: DMZ Servers → Wazuh Manager (Agent Communication)
-```
-
-#### Regra 8-15: DMZ → DC (Authentication)
-
-```
-# LDAP/LDAPS
-Action: Pass | Protocol: TCP/UDP
-Source: DMZ net | Destination: DC_IP
-Port: 389, 636
-Description: DMZ → DC - LDAP Authentication
-
-# Kerberos
-Port: 88
-Description: DMZ → DC - Kerberos KDC
-
-# SMB
-Protocol: TCP | Port: 445
-Description: DMZ → DC - SMB/CIFS
-
-# RPC
-Port: RPC_PORTS
-Description: DMZ → DC - RPC
-
-# DNS
-Protocol: TCP/UDP | Port: 53
-Description: DMZ → DC - DNS Resolution
-
-# Kpasswd
-Protocol: TCP/UDP | Port: 464
-Description: DMZ → DC - Password Changes
-
-# NTP
-Protocol: UDP | Port: 123
-Description: DMZ → DC - Time Synchronization
-
-# ICMP
-Protocol: ICMP
-Description: DMZ → DC - PING
-```
-
-#### Regra 16-20: DMZ Inter-Server (Specific)
-
-```
-# Mail ↔ Nextcloud (bidirectional)
-Action: Pass | Protocol: TCP
-Source: MAIL_IP <-> FILESERVER_IP
-Destination: FILESERVER_IP <-> MAIL_IP
-Port: 80, 443
-Description: Mailcow ↔ Nextcloud Integration
-
-# Nextcloud → DC LDAP
-Action: Pass | Protocol: TCP
-Source: FILESERVER_IP
-Destination: DC_IP
-Port: 389, 636
-Description: Nextcloud → DC LDAP Auth
-
-# Webserver → Mail (Z-Push ActiveSync)
-Action: Pass | Protocol: TCP
-Source: WEB_IP
-Destination: MAIL_IP
-Port: 993 (IMAPS), 25, 587 (SMTP)
-Description: Webserver → Mail (Z-Push, Contact sync)
-```
-
-#### Regra 21-22: DMZ Isolation
-
-```
-# Block Inter-Server
-Action: Reject
-Protocol: Any
-Source: DMZ net
-Destination: DMZ_SERVERS
-Port: Any
-Log: ✅
-Description: Block DMZ Inter-Server Communication (except specific rules above)
-
-# Block DMZ → LAN
-Action: Reject
-Protocol: Any
-Source: DMZ net
-Destination: LAN_NET
-Port: Any
-Log: ✅
-Description: Block DMZ → LAN - Default Deny
-```
+| # | States | Ação | Proto | Origem | Porta | Destino | Porta | Gateway | Descrição |
+|---|--------|------|-------|--------|-------|---------|-------|---------|-----------|
+| | | | **SAÍDA PARA INTERNET** | | | | | | |
+| 1 | 0/0.45 KiB | ✅ Pass | IPv4 ICMP | DMZ address | * | * | * | none | DMZ → Internet: ICMP (ping) |
+| 2 | 0/0 B | ✅ Pass | IPv4 TCP | 10.0.0.20 | * | * | 2525 | none | DMZ → Internet: MAILCOW SMTP2GO |
+| 3 | | ✅ Pass | IPv4 TCP | 10.0.0.20 | * | * | 25 (SMTP) | none | DMZ → Internet: Mail SMTP |
+| 4 | 22/3.64 MiB | ✅ Pass | IPv4 TCP/UDP | DMZ address | * | * | 53 (DNS) | none | DMZ → Internet: DNS |
+| 5 | | ✅ Pass | IPv4 TCP | DMZ address | * | * | 80 (HTTP) | none | DMZ → Internet: HTTP |
+| 6 | 64/73.67 KiB | ✅ Pass | IPv4 TCP | DMZ address | * | * | 443 (HTTPS) | none | DMZ → Internet: HTTPS |
+| 7 | | ✅ Pass | IPv4 UDP | DMZ address | * | * | 123 (NTP) | none | DMZ → Internet: NTP |
+| | | | **COMUNICAÇÃO COM LAN (DC + FILES)** | | | | | | |
+| 8 | 8/2.11 KiB | ✅ Pass | IPv4 TCP/UDP | DMZ address | * | 192.168.1.50 | * | none | DMZ → WAZUH MANAGER: TCP/UDP |
+| 9 | 5/427 KiB | ✅ Pass | IPv4 TCP/UDP | DMZ address | * | 192.168.1.10 | 389 (LDAP) | none | DMZ → DC: Mail LDAP |
+| 10 | | ✅ Pass | IPv4 TCP | DMZ address | * | 192.168.1.10 | 636 (LDAP/S) | none | DMZ → DC: Mail LDAPS |
+| 11 | 0/158 KiB | ✅ Pass | IPv4 TCP | DMZ address | * | 192.168.1.10 | 88 | none | DMZ → DC: Kerberos |
+| 12 | | ✅ Pass | IPv4 TCP | DMZ address | * | 192.168.1.10 | 445 (MS DS) | none | DMZ → DC: MS DS |
+| 13 | 0/0 B | ✅ Pass | IPv4 TCP | DMZ address | * | 192.168.1.10 | 49152-65535 | none | DMZ → DC: RPC Dinâmico |
+| 14 | 0/0 B | ✅ Pass | IPv4 TCP/UDP | DMZ address | * | 192.168.1.10 | 53 (DNS) | none | DMZ → DC: DNS |
+| 15 | 0/0 B | ✅ Pass | IPv4 TCP/UDP | DMZ address | * | 192.168.1.10 | 464 | none | DMZ → DC: KDC |
+| 16 | | ✅ Pass | IPv4 UDP | DMZ address | * | 192.168.1.10 | 123 (NTP) | none | DMZ → DC: NTP |
+| 17 | | ✅ Pass | IPv4 ICMP | DMZ address | * | 192.168.1.10 | * | none | DMZ → DC: PING |
+| 18 | 0/0 B | ✅ Pass | IPv4 TCP | 10.0.0.20 | * | 192.168.1.40 | 443 (HTTPS) | none | DMZ → LAN: Mail → Nextcloud (return traffic) |
+| 19 | | ✅ Pass | IPv4 TCP | 10.0.0.20 | * | 192.168.1.40 | 8080 | none | DMZ → Files: Nextcloud |
+| 20 | | ✅ Pass | IPv4 TCP | 10.0.0.30 | * | 192.168.1.40 | 7867 | none | DMZ → Files: Notify Push |
+| | | | **COMUNICAÇÃO INTERNA DMZ** | | | | | | |
+| 21 | 0/0 B | ✅ Pass | IPv4 TCP | 10.0.0.30 | * | 10.0.0.20 | 993 (IMAP/S) | none | DMZ: Webserver → Mail (IMAPS for Z-Push) |
+| 22 | | ✅ Pass | IPv4 TCP | 10.0.0.30 | * | 10.0.0.20 | 587 | none | DMZ: Webserver → Mail (SMTP SUBMISSION) |
+| 23 | 0/0 B | ✅ Pass | IPv4 TCP | 10.0.0.30 | * | 10.0.0.20 | 327 | none | |
+| 24 | | ✅ Pass | IPv4 TCP | 10.0.0.30 | * | 10.0.0.20 | 143 (IMAP) | none | DMZ: Webserver → Mail (IMAP for Z-Push) |
+| | | | **SEGURANÇA** | | | | | | |
+| 25 | | ❌ Reject | IPv4 TCP | DMZ address | * | DMZ address | * | none | DMZ: Block Inter-server |
+| 26 | 0/0 B | ❌ Reject | IPv4 TCP | DMZ address | * | 192.168.1.0/24 | * | none | DMZ → LAN: Block |
 
 ---
 
 ## 🔐 Regras OpenVPN (Hierarquia por Níveis)
-
 ```
 Firewall → Rules → OpenVPN
 ```
@@ -515,174 +192,59 @@ Firewall → Rules → OpenVPN
 - ❌ Default Deny no final
 
 ### Hierarquia de Níveis
-
 ```
-L0 - Backup VPN (10.9.0.0/24)     → Acesso Total (emergência)
+L0 - VPN Backup (10.9.0.0/24)     → Acesso Total (emergência)
 L1 - Admin (TI)                   → Acesso Total
 L2 - Gestão (Gestores)            → LAN + DMZ + Internet
-L3 - Departamentos                → DC + Internet
+L3 - Departamentos                → Serviços específicos + Internet
 L4 - Users                        → Mail + Nextcloud + Internet
 L5 - DEFAULT DENY                 → Block All
 ```
 
 ### Lista de Regras
 
-| # | Ação | Proto | Origem | Porta Origem | Destino | Porta Destino | Descrição |
-|---|------|-------|--------|--------------|---------|---------------|-----------|
-| **L0 - Backup VPN** |
-| 1 | ✅ Pass | * | Alias_VPN_Backup | * | * | * | [L0-BACKUP] VPN Local - Full Access |
-| **L1 - Admin (TI)** |
-| 2 | ✅ Pass | * | Alias_VPN_TI | * | LAN_NET | * | [L1-Admin] TI → LAN (Full) |
-| 3 | ✅ Pass | * | Alias_VPN_TI | * | DMZ_NET | * | [L1-Admin] TI → DMZ (Full) |
-| 4 | ✅ Pass | * | Alias_VPN_TI | * | * | * | [L1-Admin] TI → Internet |
-| **L2 - Gestão** |
-| 5 | ✅ Pass | * | Alias_VPN_Gestores | * | LAN_NET | * | [L2-Gestao] Gestores → LAN |
-| 6 | ✅ Pass | * | Alias_VPN_Gestores | * | DMZ_NET | * | [L2-Gestao] Gestores → DMZ |
-| 7 | ✅ Pass | * | Alias_VPN_Gestores | * | * | * | [L2-Gestao] Gestores → Internet |
-| **L3 - Departamentos** |
-| 8 | ✅ Pass | TCP | Alias_VPN_Financeiro | * | DC_IP | SMB_PORTS | [L3-Dept] Financeiro → DC (SMB) |
-| 9 | ✅ Pass | TCP/UDP | Alias_VPN_Financeiro | * | DC_IP | 53 | [L3-Dept] Financeiro → DC (DNS) |
-| 10 | ✅ Pass | * | Alias_VPN_Financeiro | * | * | * | [L3-Dept] Financeiro → Internet |
-| 11 | ✅ Pass | TCP | Alias_VPN_Comercial | * | DC_IP | SMB_PORTS | [L3-Dept] Comercial → DC (SMB) |
-| 12 | ✅ Pass | TCP/UDP | Alias_VPN_Comercial | * | DC_IP | 53 | [L3-Dept] Comercial → DC (DNS) |
-| 13 | ✅ Pass | * | Alias_VPN_Comercial | * | * | * | [L3-Dept] Comercial → Internet |
-| **L4 - Users** |
-| 14 | ✅ Pass | TCP | Alias_VPN_VPN_Users | * | MAIL_IP | MAIL_PUBLIC | [L4-Users] VPN → Mail |
-| 15 | ✅ Pass | TCP | Alias_VPN_VPN_Users | * | FILESERVER_IP | 80, 443 | [L4-Users] VPN → Nextcloud |
-| 16 | ✅ Pass | TCP/UDP | Alias_VPN_VPN_Users | * | * | 53 | [L4-Users] VPN → DNS |
-| 17 | ✅ Pass | * | Alias_VPN_VPN_Users | * | * | * | [L4-Users] VPN → Internet |
-| **L5 - Security** |
-| 18 | ❌ Block | * | * | * | * | * | [L5-Security] DEFAULT DENY - Block All |
-
-### Configuração Detalhada
-
-#### Regra 1: L0 - Backup VPN (Emergency)
-
-```
-Action: Pass
-Protocol: Any
-Source: Alias_VPN_Backup (10.9.0.0/24)
-Destination: Any
-Port: Any
-
-Extra Options:
-- Log: ✅
-- Description: [L0-BACKUP] VPN Local - Full Access (Emergency)
-
-Nota: Autenticação local, acesso total para emergências
-```
-
-#### Regras 2-4: L1 - Admin (TI)
-
-```
-# TI → LAN
-Action: Pass | Protocol: Any
-Source: Alias_VPN_TI (10.8.0.10-59)
-Destination: LAN_NET (192.168.1.0/24)
-Description: [L1-Admin] TI → LAN (Full Access)
-
-# TI → DMZ
-Destination: DMZ_NET (10.0.0.0/24)
-Description: [L1-Admin] TI → DMZ (Full Access)
-
-# TI → Internet
-Destination: Any
-Description: [L1-Admin] TI → Internet (Full Access)
-```
-
-#### Regras 5-7: L2 - Gestão
-
-```
-# Gestores → LAN
-Action: Pass | Protocol: Any
-Source: Alias_VPN_Gestores (10.8.0.60-109)
-Destination: LAN_NET
-Description: [L2-Gestao] Gestores → LAN
-
-# Gestores → DMZ
-Destination: DMZ_NET
-Description: [L2-Gestao] Gestores → DMZ
-
-# Gestores → Internet
-Destination: Any
-Description: [L2-Gestao] Gestores → Internet
-```
-
-#### Regras 8-13: L3 - Departamentos
-
-```
-# Financeiro → DC (SMB)
-Action: Pass | Protocol: TCP
-Source: Alias_VPN_Financeiro (10.8.0.110-159)
-Destination: DC_IP
-Port: SMB_PORTS (139, 445)
-Description: [L3-Dept] Financeiro → DC (File Shares)
-
-# Financeiro → DC (DNS)
-Protocol: TCP/UDP | Port: 53
-Description: [L3-Dept] Financeiro → DC (DNS)
-
-# Financeiro → Internet
-Protocol: Any | Destination: Any
-Description: [L3-Dept] Financeiro → Internet
-
-# Comercial → DC (SMB)
-Source: Alias_VPN_Comercial (10.8.0.160-209)
-Port: SMB_PORTS
-Description: [L3-Dept] Comercial → DC (File Shares)
-
-# Comercial → DC (DNS)
-Protocol: TCP/UDP | Port: 53
-Description: [L3-Dept] Comercial → DC (DNS)
-
-# Comercial → Internet
-Protocol: Any | Destination: Any
-Description: [L3-Dept] Comercial → Internet
-```
-
-#### Regras 14-17: L4 - Basic Users
-
-```
-# VPN Users → Mail
-Action: Pass | Protocol: TCP
-Source: Alias_VPN_VPN_Users (10.8.0.210-254)
-Destination: MAIL_IP
-Port: MAIL_PUBLIC (25, 143, 587, 993)
-Description: [L4-Users] VPN → Mail Services
-
-# VPN Users → Nextcloud
-Protocol: TCP
-Destination: FILESERVER_IP
-Port: 80, 443
-Description: [L4-Users] VPN → Nextcloud
-
-# VPN Users → DNS
-Protocol: TCP/UDP
-Destination: Any
-Port: 53
-Description: [L4-Users] VPN → DNS
-
-# VPN Users → Internet
-Protocol: Any
-Destination: Any
-Description: [L4-Users] VPN → Internet
-```
-
-#### Regra 18: L5 - Default Deny
-
-```
-Action: Block
-Protocol: Any
-Source: Any
-Destination: Any
-Port: Any
-
-Extra Options:
-- Log: ✅ Log packets
-- Description: [L5-Security] DEFAULT DENY - Block All VPN Traffic Not Explicitly Allowed
-
-Nota: Esta regra garante que apenas o tráfego explicitamente permitido passa
-```
+| # | States | Ação | Proto | Origem | Porta | Destino | Porta | Gateway | Descrição |
+|---|--------|------|-------|--------|-------|---------|-------|---------|-----------|
+| | | | **VPN BACKUP** | | | | | | |
+| 1 | 10/34 MiB | ✅ Pass | IPv4 TCP | ALL_GROUPS | * | 10.0.0.30 | 443 (HTTPS) | none | |
+| 2 | 0/0 B | ✅ Pass | IPv4 ICMP | 10.9.0.0/24 | * | * | * | none | [VPN-Backup] ICMP |
+| 3 | | ✅ Pass | IPv4 TCP | 10.9.0.0/24 | * | 192.168.1.1 | 22 (SSH) | none | [VPN-Backup] SSH → pfSense |
+| 4 | | ✅ Pass | IPv4 TCP | 10.9.0.0/24 | * | 192.168.1.1 | 443 | none | [VPN-Backup] WebUI → pfSense (443) |
+| 5 | 0/0 B | ✅ Pass | IPv4 TCP | 10.9.0.0/24 | * | 192.168.1.30 | 8007 | none | [VPN-Backup] PBS |
+| 6 | | ✅ Pass | IPv4 TCP | 10.9.0.0/24 | * | * | 53 (DNS) | none | [VPN-Backup] DNS |
+| 7 | 0/0 B | ✅ Pass | IPv4 TCP | 10.9.0.0/24 | * | * | 80 (HTTP) | none | [VPN-Backup] Internet (HTTP) |
+| 8 | | ✅ Pass | IPv4 TCP | 10.9.0.0/24 | * | * | 443 (HTTPS) | none | [VPN-Backup] Internet (HTTPS) |
+| 9 | | ❌ Block | IPv4 TCP | 10.9.0.0/24 | * | 192.168.1.0/24 | * | none | [VPN-Backup] BLOCK → LAN |
+| 10 | | ❌ Block | IPv4 TCP | 10.9.0.0/24 | * | * | * | none | [VPN-Backup] BLOCK → DMZ |
+| | | | **NÍVEL 1: ADMINISTRAÇÃO (ACESSO TOTAL)** | | | | | | |
+| 11 | | ✅ Pass | IPv4 TCP | Alias_VPN_TI | * | * | * | none | [L1-Admin] TI → Acesso Total |
+| | | | **NÍVEL 2: GESTÃO** | | | | | | |
+| 12 | | ✅ Pass | IPv4 TCP | Alias_VPN_Gestores | * | LAN_NET | * | none | [L2-Gestão] Gestores → LAN |
+| 13 | | ✅ Pass | IPv4 TCP | Alias_VPN_Gestores | * | DMZ_NET | * | none | [L2-Gestão] Gestores → DMZ |
+| 14 | | ✅ Pass | IPv4 TCP | Alias_VPN_Gestores | * | * | * | none | [L2-Gestão] Gestores → Internet |
+| | | | **NÍVEL 3: DEPARTAMENTOS (FINANCEIRO + COMERCIAL)** | | | | | | |
+| 15 | | ✅ Pass | IPv4 TCP | Alias_VPN_Financeiro | * | * | 445 (MS DS) | none | [L3-Dept] Financeiro → File Server (SMB) |
+| 16 | 0/0 B | ✅ Pass | IPv4 TCP/UDP | Alias_VPN_Financeiro | * | HOST_DC | 53 (DNS) | none | [L3-Dept] Financeiro → DNS |
+| 17 | | ✅ Pass | IPv4 TCP | Alias_VPN_Financeiro | * | * | 80 (HTTP) | none | [L3-Dept] Financeiro → Internet (HTTP) |
+| 18 | | ✅ Pass | IPv4 TCP | Alias_VPN_Financeiro | * | * | 443 (HTTPS) | none | [L3-Dept] Financeiro → Internet (HTTPS) |
+| 19 | | ✅ Pass | IPv4 UDP | Alias_VPN_Financeiro | * | * | 123 (NTP) | none | [L3-Dept] Financeiro → NTP |
+| 20 | | ✅ Pass | IPv4 TCP | Alias_VPN_Comercial | * | * | 445 (MS DS) | none | [L3-Dept] Comercial → File Server (SMB) |
+| 21 | 0/0 B | ✅ Pass | IPv4 TCP/UDP | Alias_VPN_Comercial | * | HOST_DC | 53 (DNS) | none | [L3-Dept] Comercial → DNS |
+| 22 | | ✅ Pass | IPv4 TCP | Alias_VPN_Comercial | * | * | 80 (HTTP) | none | [L3-Dept] Comercial → Internet (HTTP) |
+| 23 | | ✅ Pass | IPv4 TCP | Alias_VPN_Comercial | * | * | 443 (HTTPS) | none | [L3-Dept] Comercial → Internet (HTTPS) |
+| 24 | | ✅ Pass | IPv4 UDP | Alias_VPN_Comercial | * | * | 123 (NTP) | none | [L3-Dept] Comercial → NTP |
+| | | | **NÍVEL 4: UTILIZADORES GERAIS (VPN_USERS)** | | | | | | |
+| 25 | | ✅ Pass | IPv4 TCP | ALL_GROUPS | * | HOST_MAIL | 143 (IMAP) | none | [L4-Users] VPN_Users → Mail (IMAP) |
+| 26 | | ✅ Pass | IPv4 TCP | ALL_GROUPS | * | HOST_MAIL | 993 (IMAP/S) | none | [L4-Users] VPN_Users → Mail (Submission) |
+| 27 | | ✅ Pass | IPv4 TCP | ALL_GROUPS | * | HOST_MAIL | 587 | none | [L4-Users] VPN_Users → Mail (Submission) |
+| 28 | | ✅ Pass | IPv4 TCP | ALL_GROUPS | * | 10.0.0.30 | 80 (HTTP) | none | [L4-Users] VPN_Users → Webserver (HTTP) |
+| 29 | | ✅ Pass | IPv4 TCP/UDP | ALL_GROUPS | * | HOST_DC | 53 (DNS) | none | [L4-Users] VPN_Users → DNS |
+| 30 | | ✅ Pass | IPv4 TCP | ALL_GROUPS | * | * | 80 (HTTP) | none | [L4-Users] VPN_Users → Internet (HTTP) |
+| 31 | | ✅ Pass | IPv4 TCP | ALL_GROUPS | * | * | 443 (HTTPS) | none | [L4-Users] VPN_Users → Internet (HTTPS) |
+| 32 | | ✅ Pass | IPv4 UDP | ALL_GROUPS | * | * | 123 (NTP) | none | [L4-Users] VPN_Users → NTP |
+| 33 | | ✅ Pass | IPv4 ICMP | ALL_GROUPS | * | * | * | none | [L4-Users] VPN_Users → ICMP |
+| | | | **NÍVEL 5: SEGURANÇA (DEFAULT DENY)** | | | | | | |
+| 34 | 1/1 B | ❌ Block | IPv4 TCP | * | * | * | * | none | [L5-Security] DEFAULT DENY - Block All |
 
 ---
 
@@ -692,144 +254,22 @@ Nota: Esta regra garante que apenas o tráfego explicitamente permitido passa
 
 | Interface | Regras Pass | Regras Block/Reject | Total |
 |-----------|-------------|---------------------|-------|
-| **WAN** | 13 | 1 (implícito) | 14 |
-| **LAN** | 17 | 1 | 18 |
-| **DMZ** | 20 | 2 | 22 |
-| **OpenVPN** | 17 | 1 | 18 |
-| **Total** | **67 regras** | **5 regras** | **72 regras** |
+| **WAN** | 10 | 1 | 11 |
+| **LAN** | 30 | 1 | 31 |
+| **DMZ** | 24 | 2 | 26 |
+| **OpenVPN** | 32 | 2 | 34 |
+| **Total** | **96 regras** | **6 regras** | **102 regras** |
 
 ### Portas Mais Utilizadas
 
 | Porta(s) | Protocolo | Serviço | Frequência |
 |----------|-----------|---------|------------|
-| 80, 443 | TCP | HTTP/HTTPS | 15 regras |
-| 53 | TCP/UDP | DNS | 8 regras |
+| 80, 443 | TCP | HTTP/HTTPS | 20+ regras |
+| 53 | TCP/UDP | DNS | 10+ regras |
 | 389, 636 | TCP/UDP | LDAP/LDAPS | 6 regras |
 | 25, 587 | TCP | SMTP | 5 regras |
 | 88 | TCP/UDP | Kerberos | 4 regras |
-| 445 | TCP | SMB | 4 regras |
-
----
-
-## 🛠️ Gestão de Regras
-
-### Adicionar Nova Regra
-
-```
-Firewall → Rules → [Interface] → Add (top/bottom)
-
-1. Action: Pass/Block/Reject
-2. Interface: WAN/LAN/DMZ/OpenVPN
-3. Protocol: TCP/UDP/ICMP/Any
-4. Source: Selecionar origem
-5. Destination: Selecionar destino
-6. Destination Port Range: Porta(s)
-7. Log: Ativar se necessário
-8. Description: Descrição clara
-9. Save → Apply Changes
-```
-
-### Reordenar Regras
-
-```
-Firewall → Rules → [Interface]
-
-- Arrastar e largar (drag & drop)
-- Ordem: top-to-bottom (primeira match = ação)
-- Save → Apply Changes após reordenar
-```
-
-### Ativar/Desativar Regra
-
-```
-Firewall → Rules → [Interface]
-
-- Clicar no ícone ✅/❌
-- Regra desativada = ⚠️ (ignored)
-- Apply Changes para efetivar
-```
-
-### Ver Estados Ativos
-
-```
-Diagnostics → States
-
-Mostra:
-- Sessões ativas
-- Estados por protocolo
-- Source/Destination
-- Tempo restante
-
-Filtros:
-- Interface
-- Protocol
-- Source/Destination
-```
-
----
-
-## 🔍 Logs e Troubleshooting
-
-### Ver Logs de Firewall
-
-```
-Status → System Logs → Firewall
-
-Tabs:
-- Normal View: Tráfego bloqueado
-- Dynamic View: Real-time updates
-- Summary View: Estatísticas
-```
-
-### Logs em Tempo Real
-
-```bash
-# Via SSH/Console
-clog /var/log/filter.log | tail -f
-
-# Ver apenas bloqueios
-clog /var/log/filter.log | grep -i block
-
-# Ver tráfego de IP específico
-clog /var/log/filter.log | grep 192.168.1.10
-```
-
-### Troubleshooting Common Issues
-
-#### Problema: Tráfego bloqueado inesperadamente
-
-**Diagnóstico**:
-1. Verificar logs: `Status → System Logs → Firewall`
-2. Identificar regra que bloqueou
-3. Verificar ordem das regras
-
-**Solução**:
-- Adicionar regra de pass acima da regra de block
-- Ou mover regra existente para cima
-
-#### Problema: Regra não funciona
-
-**Diagnóstico**:
-1. Verificar ordem (primeira match vence)
-2. Verificar aliases corretos
-3. Verificar interface correta
-
-**Solução**:
-```
-- Ativar logging na regra
-- Testar tráfego
-- Verificar logs para ver se regra foi aplicada
-```
-
-#### Problema: Estados antigos persistem
-
-**Solução**:
-```
-Diagnostics → States → Reset States
-
-Ou via CLI:
-pfctl -F states
-```
+| 445 | TCP | SMB/MS DS | 4 regras |
 
 ---
 
@@ -839,7 +279,7 @@ pfctl -F states
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -866,4 +306,4 @@ Este projeto está licenciado sob a [MIT License](../../LICENSE).
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
