@@ -4,6 +4,14 @@
 
 ---
 
+## 📹 Demonstração
+
+O vídeo abaixo demonstra a estrutura completa do Active Directory, incluindo OUs, utilizadores, grupos de segurança e membros de cada grupo:
+
+https://github.com/user-attachments/assets/b84911b0-c776-4a00-a71c-5603aaac79ac
+
+---
+
 ## 📋 Índice
 
 1. [Visão Geral](#-visão-geral)
