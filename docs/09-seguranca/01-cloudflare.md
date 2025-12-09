@@ -29,7 +29,7 @@ O Cloudflare atua como a primeira camada de defesa da infraestrutura FSociety, p
 | Parâmetro | Valor |
 |-----------|-------|
 | **Domínio** | fsociety.pt |
-| **IP Público** | 188.81.65.191 |
+| **IP Público** | 188.81.xx.xxx |
 | **DNS Setup** | Full |
 | **Status** | ✅ Ativo |
 
@@ -117,12 +117,12 @@ Este é o modo mais seguro de operação SSL/TLS no Cloudflare:
 
 | Tipo | Nome | Conteúdo | Proxy Status |
 |------|------|----------|--------------|
-| A | fsociety.pt | 188.81.65.191 | ☁️ Proxied |
-| A | mail | 188.81.65.191 | 🔴 DNS only |
-| A | nextcloud | 188.81.65.191 | ☁️ Proxied |
-| A | vpn | 188.81.65.191 | 🔴 DNS only |
-| A | webmail | 188.81.65.191 | ☁️ Proxied |
-| A | www | 188.81.65.191 | ☁️ Proxied |
+| A | fsociety.pt | 188.81.xx.xxx | ☁️ Proxied |
+| A | mail | 188.81.xx.xxx | 🔴 DNS only |
+| A | nextcloud | 188.81.xx.xxx | ☁️ Proxied |
+| A | vpn | 188.81.xx.xxx | 🔴 DNS only |
+| A | webmail | 188.81.xx.xxx | ☁️ Proxied |
+| A | www | 188.81.xx.xxx | ☁️ Proxied |
 | CNAME | autoconfig | mail.fsociety.pt | 🔴 DNS only |
 | CNAME | autodiscover | mail.fsociety.pt | 🔴 DNS only |
 | CNAME | em717937 | return.smtp2go.net | 🔴 DNS only |
@@ -133,14 +133,14 @@ Este é o modo mais seguro de operação SSL/TLS no Cloudflare:
 | TLSA | _25._tcp.mail | 3 1 1 a003db588844cda96... | 🔴 DNS only |
 | TXT | dkim._domainkey | v=DKIM1;k=rsa;t=s;s=ema... | 🔴 DNS only |
 | TXT | _dmarc | v=DMARC1; p=quarantine | 🔴 DNS only |
-| TXT | fsociety.pt | v=spf1 ip4:188.81.65.191 -all | 🔴 DNS only |
+| TXT | fsociety.pt | v=spf1 ip4:188.81.xx.xxx -all | 🔴 DNS only |
 
 ### Análise da Configuração
 
 **Registos com Proxy (☁️)**:
 - `fsociety.pt`, `www`, `nextcloud`, `webmail` passam pelo Cloudflare
 - Beneficiam de CDN, WAF e proteção DDoS
-- IP real do servidor (188.81.65.191) fica oculto
+- IP real do servidor (188.81.xx.xxx) fica oculto
 
 **Registos DNS Only (🔴)**:
 - `mail`, `vpn` apontam diretamente para o servidor
@@ -149,7 +149,7 @@ Este é o modo mais seguro de operação SSL/TLS no Cloudflare:
 - VPN requer conexão direta ao servidor
 
 **Configuração de Email**:
-- **SPF**: `v=spf1 ip4:188.81.65.191 -all` (rejeita emails de outros IPs)
+- **SPF**: `v=spf1 ip4:188.81.xx.xxx -all` (rejeita emails de outros IPs)
 - **DKIM**: Autenticação com chave RSA via SMTP2GO
 - **DMARC**: Política de quarentena para emails não autenticados
 - **TLSA**: DANE para validação de certificado SMTP
@@ -212,7 +212,7 @@ curl -I https://fsociety.pt
 # Ou "Full" se o origin tem certificado self-signed
 
 # Verificar se o origin está a forçar HTTPS corretamente
-curl -I http://188.81.65.191
+curl -I http://188.81.xx.xxx
 ```
 
 #### 2. Email não funciona
