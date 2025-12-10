@@ -32,7 +32,7 @@
 │  │  SAMBA AD   │  │    DNS      │  │    DHCP     │             │
 │  │     DC      │  │ (Integrado) │  │   Server    │             │
 │  │             │  │             │  │             │             │
-│  ��� • LDAP      │  │ • Zonas AD  │  │ • Pool IPs  │             │
+│  │ • LDAP      │  │ • Zonas AD  │  │ • Pool IPs  │             │
 │  │ • Kerberos  │  │ • PTR       │  │ • Reservas  │             │
 │  │ • GPO       │  │ • SRV       │  │ • Options   │             │
 │  └──────┬──────┘  └──────┬──────┘  └─────────────┘             │
