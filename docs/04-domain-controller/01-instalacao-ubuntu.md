@@ -226,9 +226,9 @@ timedatectl timesync-status
 ### Saída Esperada
 
 ```
-               Local time: Mon 2024-12-02 18:30:00 WET
-           Universal time: Mon 2024-12-02 18:30:00 UTC
-                 RTC time: Mon 2024-12-02 18:30:00
+               Local time: Mon 2025-12-02 18:30:00 WET
+           Universal time: Mon 2025-12-02 18:30:00 UTC
+                 RTC time: Mon 2025-12-02 18:30:00
                 Time zone: Europe/Lisbon (WET, +0000)
 System clock synchronized: yes
               NTP service: active
@@ -506,7 +506,7 @@ Operating System: Ubuntu 24.04.3 LTS
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -525,6 +525,6 @@ Operating System: Ubuntu 24.04.3 LTS
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
 
 </div>
