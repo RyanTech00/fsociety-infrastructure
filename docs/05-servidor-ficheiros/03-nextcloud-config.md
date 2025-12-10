@@ -472,4 +472,4 @@ sudo -u www-data php /var/www/nextcloud/occ serverinfo:get
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*

@@ -342,7 +342,7 @@ access_by_lua_block {
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -371,4 +371,4 @@ Este projeto está licenciado sob a [MIT License](../../LICENSE).
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*

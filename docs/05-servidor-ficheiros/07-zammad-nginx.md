@@ -364,4 +364,4 @@ No próximo passo, o **Webserver DMZ** (10.0.0.30) fará reverse proxy de `ticke
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*

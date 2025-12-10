@@ -234,7 +234,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Curso** | Cibersegurança, Redes e Sistemas Informáticos |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 | **Domínio** | fsociety.pt |
 

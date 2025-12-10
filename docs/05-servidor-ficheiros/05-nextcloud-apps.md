@@ -627,4 +627,4 @@ echo "Apps instaladas com sucesso!"
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
