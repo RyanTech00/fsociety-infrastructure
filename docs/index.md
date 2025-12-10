@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# 🔐 FSociety. pt - Documentação da Infraestrutura
+# 🔐 FSociety.pt - Documentação da Infraestrutura
 
 <div align="center">
 
@@ -119,7 +119,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 | [Aliases](03-pfsense/03-aliases.md) | 34 aliases organizados |
 | [Regras Firewall](03-pfsense/04-regras-firewall.md) | 72 regras por zona |
 | [NAT](03-pfsense/05-nat-port-forwarding.md) | Port forwards e outbound NAT |
-| [OpenVPN](03-pfsense/06-openvpn. md) | 2 servidores VPN |
+| [OpenVPN](03-pfsense/06-openvpn.md) | 2 servidores VPN |
 | [RADIUS](03-pfsense/07-radius-integracao.md) | Integração com DC |
 | [Packages](03-pfsense/08-packages-servicos.md) | ntopng, HAProxy, etc. |
 | [Manutenção](03-pfsense/09-manutencao.md) | Backup e troubleshooting |
@@ -127,7 +127,7 @@ Este projeto implementa uma **infraestrutura de rede empresarial completa** para
 
 ---
 
-### 🖥️ [Domain Controller](04-domain-controller/README. md)
+### 🖥️ [Domain Controller](04-domain-controller/README.md)
 
 > Samba AD DC com DNS, DHCP, Kerberos, FreeRADIUS e CrowdSec
 
