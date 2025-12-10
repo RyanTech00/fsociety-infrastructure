@@ -9,7 +9,7 @@
 # 🔐 FSociety.pt
 
 ### Infraestrutura Empresarial Segura | Four-Legged Firewall Architecture
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17840636.svg)](https://doi.org/10.5281/zenodo.17840636)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17840636.svg)](https://doi.org/10.5281/zenodo.17840635)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://ryantech00.github.io/fsociety-infrastructure/)
 [![pfSense](https://img.shields.io/badge/Firewall-pfSense-orange)](https://www.pfsense.org/)
