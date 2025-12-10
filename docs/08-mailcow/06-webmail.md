@@ -364,6 +364,18 @@ autoconfig.fsociety.pt.  A  188.81.65.191
 
 ### Testar Auto-configuração
 
+---
+        
+## 📹 Demonstração
+
+O vídeo abaixo demonstra a configuração automática de clientes de email 
+via Autodiscover, incluindo a validação do reverse proxy e resposta do 
+servidor:
+
+https://github.com/user-attachments/assets/cffd3332-ec0d-40e0-b99f-9b78c31445ed
+
+---
+
 **Thunderbird:**
 1. Adicionar conta apenas com email e password
 2. Thunderbird deteta automaticamente via autoconfig
