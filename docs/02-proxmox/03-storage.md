@@ -490,7 +490,7 @@ iostat -x 2
    pvesm list local --content backup
    
    # Remover backup específico
-   pvesm free local:backup/vzdump-qemu-102-2024_12_01-02_00_00.vma.zst
+   pvesm free local:backup/vzdump-qemu-102-2025_12_01-02_00_00.vma.zst
    ```
 
 4. **Utilizar PBS para backups**
@@ -601,7 +601,7 @@ Após configurar storage, prosseguir com:
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -614,4 +614,4 @@ Após configurar storage, prosseguir com:
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
