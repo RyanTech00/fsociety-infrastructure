@@ -3,6 +3,14 @@
 > **Configuração das zonas DNS integradas com o Active Directory**
 
 ---
+        
+## 📹 Demonstração
+
+O vídeo abaixo demonstra a configuração completa do DNS integrado, incluindo as 4 zonas DNS, registos A, PTR, SRV, MX/TXT e teste de forwarder:
+
+https://github.com/user-attachments/assets/e1436b9a-00f3-4a5b-9ac6-e0c2cb5b9990
+
+---
 
 ## 📋 Índice
 
@@ -456,7 +464,7 @@ sudo systemctl status samba-ad-dc
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -475,6 +483,6 @@ sudo systemctl status samba-ad-dc
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
 
 </div>
