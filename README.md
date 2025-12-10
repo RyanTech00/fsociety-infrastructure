@@ -305,10 +305,21 @@ fsociety-infrastructure/
         ├── netdata-all-nodes.png         # Dashboard Netdata
         └── ...                           # Mais screenshots
 ```
+---
+
+## 📄 Documentação Académica
+
+| Documento | Descrição | Download |
+|-----------|-----------|----------|
+| **Relatório Final ASII** | Relatório completo do projeto 2025/2026 | [PDF](docs/assets/reports/Relatorio-ASII-2025.pdf) |
+
+> 🔐 **Integridade Certificada:** A autenticidade deste documento está registada na blockchain Bitcoin via [OpenTimestamps](https://opentimestamps.org). Ver [prova de certificação](docs/assets/reports/BLOCKCHAIN-PROOF.md).
+>
+> 📦 **Arquivo Permanente:** DOI [10.5281/zenodo.17840636](https://doi.org/10.5281/zenodo.17840636)
 
 ---
 
-## 📖 Documentação
+## 📖 Documentação Git
 
 | Recurso | Descrição |
 |---------|-----------|
