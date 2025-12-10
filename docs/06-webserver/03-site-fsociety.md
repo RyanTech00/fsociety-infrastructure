@@ -145,7 +145,7 @@ Conteúdo:
         
         <!-- Footer -->
         <footer>
-            <p>FSociety.pt | ESTG/IPP 2024/2025</p>
+            <p>FSociety.pt | ESTG/IPP 2025/2026</p>
             <p class="small">Infraestrutura Empresarial Segura</p>
         </footer>
     </div>
@@ -641,4 +641,4 @@ firefox https://fsociety.pt
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*

@@ -388,4 +388,4 @@ No próximo documento, configuraremos:
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*

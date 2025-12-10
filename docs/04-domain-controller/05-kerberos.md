@@ -483,7 +483,7 @@ klist -e
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -502,6 +502,6 @@ klist -e
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
 
 </div>

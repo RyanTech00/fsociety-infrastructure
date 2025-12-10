@@ -273,4 +273,4 @@ sudo grep "apps/mail" /var/log/nginx/nextcloud_proxy_access.log | grep -v "192.1
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*

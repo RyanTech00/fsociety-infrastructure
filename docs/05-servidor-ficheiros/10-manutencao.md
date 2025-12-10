@@ -510,4 +510,4 @@ sudo tail -f /var/log/crowdsec.log
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*

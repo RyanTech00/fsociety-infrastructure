@@ -475,4 +475,4 @@ sudo -u www-data php /var/www/nextcloud/occ user:sync "OCA\User_LDAP\User_Proxy"
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
