@@ -369,20 +369,20 @@ proxmox-backup-manager datastore update pve-store \
 pvesm list pbs-store
 
 # Saída:
-# pbs-store:backup/vm/102/2024-12-01T02:00:00Z
-# pbs-store:backup/vm/104/2024-12-01T02:30:00Z
+# pbs-store:backup/vm/102/2025-12-01T02:00:00Z
+# pbs-store:backup/vm/104/2025-12-01T02:30:00Z
 
 # Restaurar para VM original
-qmrestore pbs-store:backup/vm/102/2024-12-01T02:00:00Z 102 \
+qmrestore pbs-store:backup/vm/102/2025-12-01T02:00:00Z 102 \
   --storage pve-nvme
 
 # Restaurar para nova VM (clone)
-qmrestore pbs-store:backup/vm/102/2024-12-01T02:00:00Z 110 \
+qmrestore pbs-store:backup/vm/102/2025-12-01T02:00:00Z 110 \
   --storage pve-nvme \
   --unique 1
 
 # Restaurar e iniciar
-qmrestore pbs-store:backup/vm/102/2024-12-01T02:00:00Z 102 \
+qmrestore pbs-store:backup/vm/102/2025-12-01T02:00:00Z 102 \
   --storage pve-nvme \
   --start 1
 ```
@@ -394,7 +394,7 @@ PBS permite restaurar ficheiros específicos sem restaurar VM completa.
 ```bash
 # Montar backup como filesystem
 proxmox-backup-client mount \
-  backup/vm/105/2024-12-01T02:30:00Z \
+  backup/vm/105/2025-12-01T02:30:00Z \
   /mnt/backup-mount
 
 # Copiar ficheiros necessários
@@ -466,7 +466,7 @@ proxmox-backup-client snapshot list \
 
 # Via CLI (no PBS)
 proxmox-backup-client snapshot remove \
-  vm/102/2024-11-01T02:00:00Z \
+  vm/102/2025-11-01T02:00:00Z \
   --repository root@pam@localhost:pve-store
 ```
 
@@ -475,7 +475,7 @@ proxmox-backup-client snapshot remove \
 ```bash
 # No PBS
 proxmox-backup-client snapshot verify \
-  vm/102/2024-12-01T02:00:00Z \
+  vm/102/2025-12-01T02:00:00Z \
   --repository root@pam@localhost:pve-store
 
 # Verificar todos os backups
@@ -603,7 +603,7 @@ Após configurar backups:
 |-------|------------|
 | **Instituição** | ESTG - Instituto Politécnico do Porto |
 | **Unidade Curricular** | Administração de Sistemas II |
-| **Ano Letivo** | 2024/2025 |
+| **Ano Letivo** | 2025/2026 |
 | **Autores** | Ryan Barbosa, Hugo Correia, Igor Araújo |
 
 ---
@@ -616,4 +616,4 @@ Após configurar backups:
 
 ---
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Dezembro 2025*
